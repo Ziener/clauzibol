@@ -1,0 +1,63 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Tile from "../components/Tile.astro";
+import Countdown from "../components/Countdown.astro";
+import { weeks, isUnlocked } from "../data/weeks";
+
+const next = weeks.find((w) => !isUnlocked(w));
+const openCount = weeks.filter((w) => isUnlocked(w)).length;
+---
+<Layout>
+  <section class="max-w-6xl mx-auto px-6 pt-16 pb-12">
+    <div class="max-w-3xl">
+      <p class="text-xs uppercase tracking-[0.3em] mb-4" style="color:var(--color-gold)">Plauzibele profetie · Verzegeld 20 april 2026</p>
+      <h1 class="serif text-4xl md:text-6xl leading-tight mb-6" style="color:var(--color-cream)">
+        52 blogs.<br />
+        Vooraf geschreven.<br />
+        <span style="color:var(--color-gold)">Eén slot per week.</span>
+      </h1>
+      <p class="text-lg leading-relaxed opacity-90 mb-8">
+        Op <strong>20 april 2026</strong> heeft Claude (AI) 52 blogs geschreven met de Bijbel (HSV) in de hand.
+        Alle 52 zijn cryptografisch verzegeld via <em>time-lock encryption</em> en vastgelegd in een publieke
+        hash-lijst — ook op de blockchain. Elke maandag om 07:00 uur gaat er één slot open.
+        <strong>Niemand</strong> — ook Claude en de maker niet — kan de tekst eerder lezen of nog aanpassen.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="/manifest" class="px-5 py-2.5 rounded border text-sm" style="border-color:var(--color-gold);color:var(--color-gold)">Lees het manifest</a>
+        <a href="/verificatie" class="px-5 py-2.5 rounded text-sm" style="background:var(--color-gold);color:var(--color-night)">Hoe werkt verzegeling?</a>
+      </div>
+    </div>
+  </section>
+
+  {next && (
+    <section class="max-w-6xl mx-auto px-6 py-10">
+      <div class="rounded-xl border p-6 md:p-8" style="border-color:rgba(184,134,11,0.3);background:rgba(184,134,11,0.04)">
+        <p class="text-xs uppercase tracking-widest mb-2" style="color:var(--color-gold)">Volgend slot opent</p>
+        <h2 class="serif text-2xl mb-1" style="color:var(--color-cream)">Week {next.number} — {next.title}</h2>
+        <p class="text-sm opacity-70 mb-6">Vrijgave: {new Date(next.unlockISO).toLocaleString("nl-NL", { dateStyle: "full", timeStyle: "short" })}</p>
+        <Countdown target={next.unlockISO} />
+      </div>
+    </section>
+  )}
+
+  <section class="max-w-6xl mx-auto px-6 py-12">
+    <div class="flex items-end justify-between mb-6">
+      <div>
+        <h2 class="serif text-3xl" style="color:var(--color-cream)">De 52 zegels</h2>
+        <p class="text-sm opacity-70 mt-1">{openCount} geopend · {52 - openCount} verzegeld</p>
+      </div>
+      <a href="/archief" class="text-sm hidden md:block">Volledig archief →</a>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+      {weeks.map((w) => <Tile week={w} />)}
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-6 py-16 text-center">
+    <p class="serif text-2xl md:text-3xl leading-snug opacity-90 mb-6" style="color:var(--color-cream)">
+      "Wat verborgen was, zal worden geopenbaard."
+    </p>
+    <p class="text-sm opacity-70 mb-10">Geen sensatie. Wel bezinning. Plauzibele profetie, waterdicht bewijsbaar.</p>
+    <a href="/contact" class="inline-block px-6 py-3 rounded text-sm" style="background:var(--color-gold);color:var(--color-night)">Schrijf je in voor de wekelijkse release</a>
+  </section>
+</Layout>

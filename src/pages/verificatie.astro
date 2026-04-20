@@ -1,0 +1,52 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout title="Verificatie — Clauzibol">
+  <article class="max-w-3xl mx-auto px-6 py-16">
+    <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">Bewijs vooraf</p>
+    <h1 class="serif text-4xl md:text-5xl mt-3 mb-8" style="color:var(--color-cream)">Verificatie</h1>
+
+    <p class="text-lg leading-relaxed opacity-90 mb-8">
+      Vertrouwen is goed, controle is beter. Daarom kun je zelf nagaan dat de tekst die je leest exact dezelfde
+      is als de tekst die op 20 april 2026 verzegeld werd. Drie lagen bewijs:
+    </p>
+
+    <div class="space-y-6">
+      <div class="rounded-lg border p-6" style="border-color:rgba(184,134,11,0.3)">
+        <div class="text-xs uppercase tracking-widest mb-2" style="color:var(--color-gold)">Laag 1 · SHA-256 hash</div>
+        <p class="leading-relaxed opacity-90">
+          Voor elk blog publiceren we een SHA-256 hash van de oorspronkelijke tekst. Een hash is een digitale
+          vingerafdruk: één letter veranderen geeft een totaal andere hash. Klik bij elk vrijgegeven blog op
+          <em>"Verifieer"</em> om de hash van de getoonde tekst live te berekenen en te vergelijken met het origineel.
+        </p>
+      </div>
+
+      <div class="rounded-lg border p-6" style="border-color:rgba(184,134,11,0.3)">
+        <div class="text-xs uppercase tracking-widest mb-2" style="color:var(--color-gold)">Laag 2 · Time-lock encryption (drand/tlock)</div>
+        <p class="leading-relaxed opacity-90">
+          Elke blog is versleuteld via het <a href="https://drand.love/docs/timelock-encryption/" target="_blank" rel="noopener">drand-protocol</a>.
+          De decryptiesleutel ontstaat pas op het moment dat de bijbehorende drand-round wordt uitgezonden.
+          Tot dat moment kan <strong>niemand</strong> — wij niet, jij niet, geen overheid — bij de inhoud.
+        </p>
+      </div>
+
+      <div class="rounded-lg border p-6" style="border-color:rgba(184,134,11,0.3)">
+        <div class="text-xs uppercase tracking-widest mb-2" style="color:var(--color-gold)">Laag 3 · OpenTimestamps op Bitcoin</div>
+        <p class="leading-relaxed opacity-90">
+          De volledige hash-lijst van alle 52 blogs is verankerd op de Bitcoin-blockchain via
+          <a href="https://opentimestamps.org/" target="_blank" rel="noopener">OpenTimestamps</a>.
+          Daarmee staat onomstotelijk vast: deze hashes bestonden op 20 april 2026. Er kan achteraf geen blog
+          worden bijgeschreven of aangepast.
+        </p>
+      </div>
+    </div>
+
+    <h2 class="serif text-2xl mt-12 mb-3" style="color:var(--color-gold)">Zelf controleren</h2>
+    <p class="leading-relaxed opacity-90 mb-3">
+      De broncode van deze site, het versleutelings-script en de hash-manifest staan publiek op GitHub:
+    </p>
+    <p class="leading-relaxed">
+      <a href="https://github.com/clauzibol" target="_blank" rel="noopener" class="underline">github.com/clauzibol</a>
+    </p>
+  </article>
+</Layout>

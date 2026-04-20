@@ -1,0 +1,19 @@
+---
+import { type Week, formatNL, isUnlocked } from "../data/weeks";
+const { week } = Astro.props as { week: Week };
+const open = isUnlocked(week);
+---
+<a
+  href={`/blog/${week.slug}`}
+  class={`block rounded-lg border p-5 transition hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(184,134,11,0.15)] ${open ? "tile-open" : "tile-locked"}`}
+  style={open ? "border-color:var(--color-gold)" : "border-color:rgba(255,255,255,0.06)"}
+>
+  <div class="flex items-center justify-between mb-3">
+    <span class="text-[11px] uppercase tracking-[0.2em]" style="color:var(--color-gold)">
+      Week {String(week.number).padStart(2, "0")}
+    </span>
+    <span class="text-lg">{open ? "🔓" : "🔒"}</span>
+  </div>
+  <h3 class="serif text-lg leading-snug mb-2" style="color:var(--color-cream)">{week.title}</h3>
+  <p class="text-xs opacity-70">{formatNL(week.unlockISO)}</p>
+</a>

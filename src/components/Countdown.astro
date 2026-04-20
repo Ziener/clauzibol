@@ -1,0 +1,47 @@
+---
+const { target } = Astro.props as { target: string };
+---
+<div class="countdown grid grid-cols-4 gap-3 max-w-md" data-target={target}>
+  <div class="text-center rounded border p-3" style="border-color:var(--color-gold);background:rgba(184,134,11,0.05)">
+    <div class="serif text-3xl" style="color:var(--color-gold)" data-d>--</div>
+    <div class="text-[10px] uppercase tracking-widest opacity-70">dagen</div>
+  </div>
+  <div class="text-center rounded border p-3" style="border-color:var(--color-gold);background:rgba(184,134,11,0.05)">
+    <div class="serif text-3xl" style="color:var(--color-gold)" data-h>--</div>
+    <div class="text-[10px] uppercase tracking-widest opacity-70">uren</div>
+  </div>
+  <div class="text-center rounded border p-3" style="border-color:var(--color-gold);background:rgba(184,134,11,0.05)">
+    <div class="serif text-3xl" style="color:var(--color-gold)" data-m>--</div>
+    <div class="text-[10px] uppercase tracking-widest opacity-70">min</div>
+  </div>
+  <div class="text-center rounded border p-3" style="border-color:var(--color-gold);background:rgba(184,134,11,0.05)">
+    <div class="serif text-3xl" style="color:var(--color-gold)" data-s>--</div>
+    <div class="text-[10px] uppercase tracking-widest opacity-70">sec</div>
+  </div>
+</div>
+<script>
+  document.querySelectorAll<HTMLElement>(".countdown").forEach((el) => {
+    const target = new Date(el.dataset.target!).getTime();
+    const d = el.querySelector<HTMLElement>("[data-d]")!;
+    const h = el.querySelector<HTMLElement>("[data-h]")!;
+    const m = el.querySelector<HTMLElement>("[data-m]")!;
+    const s = el.querySelector<HTMLElement>("[data-s]")!;
+    const tick = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        d.textContent = h.textContent = m.textContent = s.textContent = "00";
+        return;
+      }
+      const dd = Math.floor(diff / 86400000);
+      const hh = Math.floor((diff % 86400000) / 3600000);
+      const mm = Math.floor((diff % 3600000) / 60000);
+      const ss = Math.floor((diff % 60000) / 1000);
+      d.textContent = String(dd).padStart(2, "0");
+      h.textContent = String(hh).padStart(2, "0");
+      m.textContent = String(mm).padStart(2, "0");
+      s.textContent = String(ss).padStart(2, "0");
+    };
+    tick();
+    setInterval(tick, 1000);
+  });
+</script>

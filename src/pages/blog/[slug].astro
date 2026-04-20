@@ -1,0 +1,103 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Countdown from "../../components/Countdown.astro";
+import { weeks, isUnlocked, formatNL } from "../../data/weeks";
+
+export function getStaticPaths() {
+  return weeks.map((w) => ({ params: { slug: w.slug }, props: { week: w } }));
+}
+
+const { week } = Astro.props;
+const open = isUnlocked(week);
+const prev = weeks[week.number - 2];
+const next = weeks[week.number];
+---
+<Layout title={`Week ${week.number} — ${week.title} · Clauzibol`}>
+  <article class="max-w-3xl mx-auto px-6 py-16">
+    <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">
+      Week {String(week.number).padStart(2, "0")} · {formatNL(week.unlockISO)}
+    </p>
+    <h1 class="serif text-4xl md:text-5xl mt-3 mb-8" style="color:var(--color-cream)">{week.title}</h1>
+
+    {!open && (
+      <div class="rounded-xl border p-8 mb-10 text-center" style="border-color:var(--color-gold);background:rgba(184,134,11,0.05)">
+        <div class="text-6xl mb-4">🔒</div>
+        <h2 class="serif text-2xl mb-2" style="color:var(--color-cream)">Verzegeld</h2>
+        <p class="opacity-80 mb-6">
+          Dit blog opent op<br />
+          <strong style="color:var(--color-gold-soft)">{new Date(week.unlockISO).toLocaleString("nl-NL", { dateStyle: "full", timeStyle: "short" })}</strong>
+        </p>
+        <div class="flex justify-center mb-8">
+          <Countdown target={week.unlockISO} />
+        </div>
+        <div class="text-xs uppercase tracking-widest mb-2 opacity-70">SHA-256 hash (vooraf vastgelegd)</div>
+        <code class="block break-all text-xs px-4 py-3 rounded font-mono" style="background:rgba(0,0,0,0.3);color:var(--color-gold-soft)">{week.hash}</code>
+        <p class="text-xs opacity-60 mt-4">
+          Deze hash is op 20 april 2026 vastgelegd via OpenTimestamps op de Bitcoin-blockchain.
+          De tekst die straks verschijnt produceert exact deze vingerafdruk — anders is er gerommeld.
+        </p>
+      </div>
+    )}
+
+    {open && (
+      <>
+        <div class="prose-clauzibol leading-relaxed opacity-95 space-y-5" data-blog-body>
+          <p class="italic opacity-80">
+            <em>[Plaatsvervangende tekst — wordt automatisch vervangen door de ontsleutelde inhoud op {formatNL(week.unlockISO)}.]</em>
+          </p>
+          <p>
+            Hier verschijnt het vrijgegeven blog. Het wordt opgehaald via de tlock-decryptie van het bestand
+            <code>week-{String(week.number).padStart(2, "0")}.tlock</code> en in deze container ingevoegd.
+          </p>
+          <blockquote class="border-l-2 pl-5 italic" style="border-color:var(--color-gold);color:var(--color-gold-soft)">
+            "Bijbeltekst uit de Herziene Statenvertaling verschijnt hier (boek hoofdstuk:vers)."
+          </blockquote>
+          <p>
+            Onderaan elk vrijgegeven blog: een korte bemoediging en een gebed.
+          </p>
+        </div>
+
+        <div class="mt-12 rounded-lg border p-6" style="border-color:rgba(184,134,11,0.3);background:rgba(184,134,11,0.04)">
+          <div class="text-xs uppercase tracking-widest mb-2" style="color:var(--color-gold)">Verifieer deze tekst</div>
+          <p class="text-sm opacity-80 mb-3">
+            Originele hash (vooraf vastgelegd):
+          </p>
+          <code class="block break-all text-xs px-3 py-2 rounded font-mono mb-3" style="background:rgba(0,0,0,0.3);color:var(--color-gold-soft)">{week.hash}</code>
+          <button
+            data-verify
+            class="px-4 py-2 rounded text-sm border"
+            style="border-color:var(--color-gold);color:var(--color-gold)"
+          >Bereken hash van zichtbare tekst</button>
+          <p data-verify-result class="text-sm mt-3 opacity-90"></p>
+        </div>
+
+        <p class="mt-10 text-xs italic opacity-70">
+          Deze blog is geschreven door Claude, een AI, op 20 april 2026 en cryptografisch verzegeld tot het moment
+          van publicatie. Het is een verbeelding van wat zou kunnen gebeuren, geen zekere voorspelling. Aan deze
+          tekst kunnen geen rechten worden ontleend. De Bijbel (HSV) is leidend, niet deze woorden.
+        </p>
+      </>
+    )}
+
+    <nav class="mt-16 flex items-center justify-between text-sm">
+      {prev ? <a href={`/blog/${prev.slug}`}>← Week {prev.number}</a> : <span></span>}
+      <a href="/archief">Archief</a>
+      {next ? <a href={`/blog/${next.slug}`}>Week {next.number} →</a> : <span></span>}
+    </nav>
+  </article>
+
+  <script>
+    const btn = document.querySelector<HTMLButtonElement>("[data-verify]");
+    const out = document.querySelector<HTMLElement>("[data-verify-result]");
+    const body = document.querySelector<HTMLElement>("[data-blog-body]");
+    if (btn && out && body) {
+      btn.addEventListener("click", async () => {
+        const text = body.innerText.trim();
+        const enc = new TextEncoder().encode(text);
+        const buf = await crypto.subtle.digest("SHA-256", enc);
+        const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+        out.textContent = "sha256:" + hex;
+      });
+    }
+  </script>
+</Layout>

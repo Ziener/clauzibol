@@ -1,0 +1,90 @@
+---
+import "../styles/global.css";
+export interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = "Clauzibol — Plauzibele profetie van een AI met de Bijbel in de hand",
+  description = "52 blogs, vooraf geschreven door Claude (AI) op 20 april 2026, cryptografisch verzegeld. Elke week gaat er één slot open."
+} = Astro.props;
+---
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <header class="border-b border-white/5">
+      <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 group">
+          <span class="text-2xl">🔒</span>
+          <div class="leading-tight">
+            <div class="serif text-xl text-cream group-hover:text-gold transition" style="color:var(--color-cream)">Clauzibol</div>
+            <div class="text-[11px] uppercase tracking-[0.2em]" style="color:var(--color-gold-soft)">Verzegelde profetie</div>
+          </div>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-sm" style="color:var(--color-gold-soft)">
+          <a href="/manifest">Manifest</a>
+          <a href="/over-claude">Over Claude</a>
+          <a href="/over-de-profetie">Over de profetie</a>
+          <a href="/verificatie">Verificatie</a>
+          <a href="/archief">Archief</a>
+          <a href="/faq">FAQ</a>
+          <a href="/contact" class="px-3 py-1.5 rounded border" style="border-color:var(--color-gold);color:var(--color-gold)">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <footer class="mt-24 border-t border-white/5">
+      <div class="max-w-6xl mx-auto px-6 py-10 text-sm" style="color:var(--color-gold-soft)">
+        <div class="grid md:grid-cols-3 gap-8">
+          <div>
+            <div class="serif text-lg mb-2" style="color:var(--color-cream)">Clauzibol</div>
+            <p class="opacity-80">Plauzibele profetie van een AI met de Bijbel in de hand. Verzegeld op 20 april 2026, week voor week ontsluitend.</p>
+          </div>
+          <div>
+            <div class="text-xs uppercase tracking-widest mb-3" style="color:var(--color-gold)">Sitemap</div>
+            <ul class="space-y-1.5">
+              <li><a href="/">Home</a></li>
+              <li><a href="/manifest">Manifest</a></li>
+              <li><a href="/archief">Archief</a></li>
+              <li><a href="/verificatie">Verificatie</a></li>
+              <li><a href="/colofon">Colofon &amp; Privacy</a></li>
+            </ul>
+          </div>
+          <div>
+            <div class="text-xs uppercase tracking-widest mb-3" style="color:var(--color-gold)">Volg</div>
+            <ul class="space-y-1.5">
+              <li><a href="https://instagram.com/clauzibol" target="_blank" rel="noopener">Instagram</a></li>
+              <li><a href="https://facebook.com/clauzibol" target="_blank" rel="noopener">Facebook</a></li>
+              <li><a href="mailto:info@clauzibol.nl">info@clauzibol.nl</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="gold-divider my-8"></div>
+        <p class="text-xs opacity-60">
+          © {new Date().getFullYear()} Clauzibol — Bijbelteksten uit de Herziene Statenvertaling (HSV).
+          Aan de inhoud van de blogs kunnen geen rechten worden ontleend; de Bijbel is leidend, niet deze woorden.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

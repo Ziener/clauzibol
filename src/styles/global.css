@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme {
+  --color-night: #1a1a2e;
+  --color-night-deep: #11111e;
+  --color-gold: #B8860B;
+  --color-gold-soft: #E8D5B7;
+  --color-cream: #FFFAF3;
+
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--color-night);
+    color: var(--color-cream);
+    scroll-behavior: smooth;
+  }
+  h1, h2, h3, h4, .serif {
+    font-family: var(--font-serif);
+    letter-spacing: 0.005em;
+  }
+  a { color: var(--color-gold-soft); }
+  a:hover { color: var(--color-gold); }
+}
+
+.tile-locked {
+  background:
+    radial-gradient(circle at 30% 20%, rgba(184,134,11,0.08), transparent 60%),
+    linear-gradient(135deg, #1f1f36 0%, #15152a 100%);
+}
+.tile-open {
+  background: linear-gradient(135deg, #2a1f10 0%, #1a1a2e 100%);
+  border-color: var(--color-gold);
+}
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+}

@@ -1,0 +1,50 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout title="Manifest — Clauzibol">
+  <article class="max-w-3xl mx-auto px-6 py-16 prose-clauzibol">
+    <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">Manifest</p>
+    <h1 class="serif text-4xl md:text-5xl mt-3 mb-8" style="color:var(--color-cream)">Hoe werkt dit? Waarom kan zelfs de maker er niet bij?</h1>
+
+    <p class="text-lg leading-relaxed opacity-90">
+      Profetie is een gevoelig woord. Te vaak wordt het achteraf gemaakt: iemand voorspelt wat al gebeurd is,
+      of past de woorden zo aan dat ze altijd "uitkomen". Clauzibol wil het tegenovergestelde laten zien.
+    </p>
+
+    <h2 class="serif text-2xl mt-10 mb-3" style="color:var(--color-gold)">Wat hebben we gedaan?</h2>
+    <p class="leading-relaxed opacity-90">
+      Op <strong>20 april 2026</strong> is Claude — een AI-systeem van Anthropic — gevraagd om met de Bijbel
+      (Herziene Statenvertaling) in de hand vooruit te kijken. 52 weken, 52 blogs. Wat zou er kunnen gebeuren?
+      Welke patronen tekenen zich af? Wat zegt de Bijbel daarover?
+    </p>
+
+    <h2 class="serif text-2xl mt-10 mb-3" style="color:var(--color-gold)">Hoe is het verzegeld?</h2>
+    <ol class="space-y-3 leading-relaxed opacity-90 list-decimal pl-5">
+      <li>Elk van de 52 blogs is versleuteld met <strong>time-lock encryption</strong> via het drand/tlock-protocol (League of Entropy).</li>
+      <li>Elk blog krijgt een eigen ontgrendel-moment, gekoppeld aan een drand-round in de toekomst.</li>
+      <li>Van iedere blog is een <strong>SHA-256 hash</strong> van de oorspronkelijke tekst publiek vastgelegd.</li>
+      <li>Alle 52 hashes zijn samen verankerd op de Bitcoin-blockchain via <strong>OpenTimestamps</strong>.</li>
+    </ol>
+
+    <h2 class="serif text-2xl mt-10 mb-3" style="color:var(--color-gold)">Waarom kan niemand erbij?</h2>
+    <p class="leading-relaxed opacity-90">
+      Time-lock encryption gebruikt een publieke "beacon" die elke 30 seconden een nieuwe willekeurige waarde
+      uitzendt. De decryptie-sleutel voor week N bestaat pas op het moment dat die week aanbreekt — letterlijk.
+      Niet bij Anthropic, niet bij de maker, niet bij de hoster. De wiskunde laat het niet toe.
+    </p>
+
+    <h2 class="serif text-2xl mt-10 mb-3" style="color:var(--color-gold)">En als het misgaat?</h2>
+    <p class="leading-relaxed opacity-90">
+      De broncode van deze site staat publiek op GitHub. De versleutelde bestanden, de hash-lijst, de
+      OpenTimestamps-bewijzen — alles is openbaar en controleerbaar. Mocht drand omvallen, dan is er een tweede
+      laag voorzien via een alternatieve time-lock service.
+    </p>
+
+    <div class="gold-divider my-12"></div>
+
+    <p class="serif text-xl leading-snug opacity-90" style="color:var(--color-cream)">
+      Dit is geen voorspelling. Dit is een verbeelding, eerlijk gedaan, met de Bijbel als toetssteen,
+      en wiskundig bewijsbaar dat we niet vals spelen.
+    </p>
+  </article>
+</Layout>
