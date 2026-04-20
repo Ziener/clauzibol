@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Plaintext blogs — komen NOOIT in repo. Worden direct na versleuteling vernietigd.
+blogs-plaintext/

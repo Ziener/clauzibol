@@ -1,6 +1,7 @@
 // 52 wekelijkse blogs. Elke maandag 07:00 NL-tijd gaat er één open.
-// Start: maandag 20 april 2026, 07:00 (Europe/Amsterdam).
-// De plaintext is verzegeld (tlock). De `hash` wordt later vervangen door de echte SHA-256 van de plaintext.
+// Schrijfdatum (verzegeling): 20 april 2026.
+// Eerste publieke vrijgave: maandag 4 mei 2026, 07:00 Europe/Amsterdam.
+// De plaintext is verzegeld (tlock). De `hash` wordt later vervangen door de echte SHA-256.
 
 export type Week = {
   number: number;
@@ -11,7 +12,7 @@ export type Week = {
   drandRound?: number;      // optioneel: drand round-nummer voor tlock
 };
 
-const START = new Date("2026-04-20T07:00:00+02:00").getTime();
+const START = new Date("2026-05-04T07:00:00+02:00").getTime();
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
 const TITLES: string[] = [
