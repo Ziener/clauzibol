@@ -46,7 +46,7 @@ const openCount = weeks.filter((w) => isUnlocked(w)).length;
         <h2 class="serif text-3xl" style="color:var(--color-cream)">De 52 zegels</h2>
         <p class="text-sm opacity-70 mt-1">{openCount} geopend · {52 - openCount} verzegeld</p>
       </div>
-      <a href="/archief" class="text-sm hidden md:block">Volledig archief →</a>
+      <a href="/blogs" class="text-sm hidden md:block">Alle blogs →</a>
     </div>
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
       {weeks.map((w) => <Tile week={w} />)}
