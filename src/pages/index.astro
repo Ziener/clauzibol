@@ -33,7 +33,7 @@ const openCount = weeks.filter((w) => isUnlocked(w)).length;
     <section class="max-w-6xl mx-auto px-6 py-10">
       <div class="rounded-xl border p-6 md:p-8" style="border-color:rgba(184,134,11,0.3);background:rgba(184,134,11,0.04)">
         <p class="text-xs uppercase tracking-widest mb-2" style="color:var(--color-gold)">Volgend slot opent</p>
-        <h2 class="serif text-2xl mb-1" style="color:var(--color-cream)">Week {next.number} — {next.title}</h2>
+        <h2 class="serif text-2xl mb-1" style="color:var(--color-cream)">Week {next.number} <span class="italic opacity-60">— Verzegeld</span></h2>
         <p class="text-sm opacity-70 mb-6">Vrijgave: {new Date(next.unlockISO).toLocaleString("nl-NL", { dateStyle: "full", timeStyle: "short" })}</p>
         <Countdown target={next.unlockISO} />
       </div>

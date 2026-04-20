@@ -14,6 +14,9 @@ const open = isUnlocked(week);
     </span>
     <span class="text-lg">{open ? "🔓" : "🔒"}</span>
   </div>
-  <h3 class="serif text-lg leading-snug mb-2" style="color:var(--color-cream)">{week.title}</h3>
+  {open
+    ? <h3 class="serif text-lg leading-snug mb-2" style="color:var(--color-cream)">{week.title}</h3>
+    : <h3 class="serif text-lg leading-snug mb-2 italic opacity-60" style="color:var(--color-cream)">Verzegeld</h3>
+  }
   <p class="text-xs opacity-70">{formatNL(week.unlockISO)}</p>
 </a>

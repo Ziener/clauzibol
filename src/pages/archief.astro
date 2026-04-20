@@ -16,7 +16,7 @@ import { weeks, isUnlocked, formatNL } from "../data/weeks";
               <span class="text-lg shrink-0">{open ? "🔓" : "🔒"}</span>
               <div class="min-w-0">
                 <a href={`/blog/${w.slug}`} class="serif text-lg block truncate" style="color:var(--color-cream)">
-                  Week {String(w.number).padStart(2, "0")} — {w.title}
+                  Week {String(w.number).padStart(2, "0")} {open ? `— ${w.title}` : <span class="italic opacity-60">— Verzegeld</span>}
                 </a>
                 <div class="text-xs opacity-60">{formatNL(w.unlockISO)}</div>
               </div>

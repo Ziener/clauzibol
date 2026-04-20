@@ -12,12 +12,15 @@ const open = isUnlocked(week);
 const prev = weeks[week.number - 2];
 const next = weeks[week.number];
 ---
-<Layout title={`Week ${week.number} — ${week.title} · Clauzibol`}>
+<Layout title={open ? `Week ${week.number} — ${week.title} · Clauzibol` : `Week ${week.number} — Verzegeld · Clauzibol`}>
   <article class="max-w-3xl mx-auto px-6 py-16">
     <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">
       Week {String(week.number).padStart(2, "0")} · {formatNL(week.unlockISO)}
     </p>
-    <h1 class="serif text-4xl md:text-5xl mt-3 mb-8" style="color:var(--color-cream)">{week.title}</h1>
+    {open
+      ? <h1 class="serif text-4xl md:text-5xl mt-3 mb-8" style="color:var(--color-cream)">{week.title}</h1>
+      : <h1 class="serif text-4xl md:text-5xl mt-3 mb-8 italic opacity-70" style="color:var(--color-cream)">Verzegeld</h1>
+    }
 
     {!open && (
       <div class="rounded-xl border p-8 mb-10 text-center" style="border-color:var(--color-gold);background:rgba(184,134,11,0.05)">
