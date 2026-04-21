@@ -93,7 +93,7 @@ const tlockUrl = `/sealed/${week.slug}.tlock`;
       };
 
       try {
-        const [{ timelockDecrypt, mainnetClient }, matterMod] = await Promise.all([
+        const [{ timelockDecrypt, quicknetClient }, matterMod] = await Promise.all([
           import("https://esm.sh/tlock-js@0.9.0"),
           import("https://esm.sh/gray-matter@4.0.3?bundle"),
         ]);
@@ -103,7 +103,7 @@ const tlockUrl = `/sealed/${week.slug}.tlock`;
         if (!res.ok) throw new Error(`Kon ${tlockUrl} niet laden (${res.status})`);
         const ciphertext = new Uint8Array(await res.arrayBuffer());
 
-        const client = mainnetClient();
+        const client = quicknetClient();
         const plaintextBuf = await timelockDecrypt(ciphertext, client);
         const plaintext = new TextDecoder().decode(plaintextBuf);
 
@@ -165,7 +165,3 @@ const tlockUrl = `/sealed/${week.slug}.tlock`;
     }
   </script>
 </Layout>
-t>
-t>
-t>
-t>

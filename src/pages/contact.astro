@@ -1,11 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
-
-// FormSubmit.co, gratis, geen account nodig.
-// Bij eerste verzending stuurt FormSubmit een verificatiemail naar dit adres;
-// klik daarin op "Confirm" om het formulier te activeren. Daarna komen alle
-// inzendingen binnen op ziener@clauzibol.nl.
-const FORM_ACTION = "https://formsubmit.co/ziener@clauzibol.nl";
+// AJAX endpoint van FormSubmit, geen redirect, geen tussenpagina, geen reCAPTCHA.
+// Mailadres wordt aan runtime samengesteld in JS (zie onder), zodat het niet
+// als plain string in de HTML staat (anti-scrape).
 ---
 <Layout title="Contact, Clauzibol">
   <section class="max-w-2xl mx-auto px-6 py-16">
@@ -17,28 +14,28 @@ const FORM_ACTION = "https://formsubmit.co/ziener@clauzibol.nl";
     </p>
 
     <form
-      action={FORM_ACTION}
-      method="POST"
+      id="contactForm"
       class="rounded-lg border p-6 space-y-4"
       style="border-color:rgba(184,134,11,0.3);background:rgba(184,134,11,0.04)"
     >
       <input type="hidden" name="_subject" value="Bericht via clauzibol.nl" />
       <input type="hidden" name="_template" value="table" />
-      <input type="hidden" name="_captcha" value="true" />
-      <input type="hidden" name="_next" value="https://clauzibol.nl/contact?verstuurd=1" />
-      <!-- honeypot tegen bots -->
-      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+
+      <!-- Honeypot 1: leeg veld dat alleen bots invullen -->
+      <div style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden" aria-hidden="true">
+        <label>Vul dit veld niet in <input type="text" name="_honey" tabindex="-1" autocomplete="off" /></label>
+      </div>
 
       <div>
         <label for="naam" class="block text-sm mb-1" style="color:var(--color-gold-soft)">Naam</label>
-        <input id="naam" type="text" name="Naam" required
+        <input id="naam" type="text" name="Naam" required autocomplete="name"
           class="w-full rounded px-3 py-2 bg-transparent border focus:outline-none focus:ring-1"
           style="border-color:rgba(184,134,11,0.4);color:var(--color-cream)" />
       </div>
 
       <div>
         <label for="email" class="block text-sm mb-1" style="color:var(--color-gold-soft)">E-mail</label>
-        <input id="email" type="email" name="E-mail" required
+        <input id="email" type="email" name="E-mail" required autocomplete="email"
           class="w-full rounded px-3 py-2 bg-transparent border"
           style="border-color:rgba(184,134,11,0.4);color:var(--color-cream)" />
       </div>
@@ -68,27 +65,81 @@ const FORM_ACTION = "https://formsubmit.co/ziener@clauzibol.nl";
         <span>Ja, schrijf me ook in voor de wekelijkse release-mail (één mailtje per week, uitschrijven altijd mogelijk).</span>
       </label>
 
-      <button type="submit"
-        class="w-full px-5 py-3 rounded text-sm font-semibold"
+      <button id="submitBtn" type="submit"
+        class="w-full px-5 py-3 rounded text-sm font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
         style="background:var(--color-gold);color:var(--color-night)">
         Verstuur bericht
       </button>
 
       <p class="text-xs opacity-60">
         Door te versturen ga je akkoord met onze <a href="/colofon" class="underline">privacyverklaring</a>.
-        We gebruiken FormSubmit.co om de mail door te sturen; geen tracking, geen reclame.
+        Berichten worden verwerkt via FormSubmit.co; geen tracking, geen reclame.
       </p>
     </form>
 
-    {Astro.url.searchParams.get("verstuurd") && (
-      <div class="mt-6 rounded-lg border p-4" style="border-color:var(--color-gold);background:rgba(184,134,11,0.1)">
-        <p style="color:var(--color-cream)">✓ Bedankt, uw bericht is verzonden. We lezen het en antwoorden waar mogelijk.</p>
-      </div>
-    )}
-
-    <div class="mt-10 text-sm opacity-80 space-y-1">
-      <p>Of mail direct: <a href="mailto:ziener@clauzibol.nl">ziener@clauzibol.nl</a></p>
-      <p>Volg op: <a href="https://instagram.com/clauzibol" target="_blank" rel="noopener">Instagram</a> · <a href="https://facebook.com/clauzibol" target="_blank" rel="noopener">Facebook</a></p>
-    </div>
+    <div id="formStatus" class="mt-6 hidden rounded-lg border p-4 text-sm"></div>
   </section>
+
+  <script is:inline>
+    (function () {
+      const form = document.getElementById("contactForm");
+      const btn = document.getElementById("submitBtn");
+      const status = document.getElementById("formStatus");
+      // Adres samenstellen aan runtime (anti-scrape: staat niet als string in de HTML)
+      const endpoint = "https://formsubmit.co/ajax/" + ["ziener", "clauzibol.nl"].join("@");
+      const loadedAt = Date.now();
+
+      function show(msg, ok) {
+        status.className = "mt-6 rounded-lg border p-4 text-sm " +
+          (ok
+            ? "border-[color:var(--color-gold)]"
+            : "border-red-500/40");
+        status.style.background = ok ? "rgba(184,134,11,0.1)" : "rgba(239,68,68,0.08)";
+        status.style.color = "var(--color-cream)";
+        status.textContent = msg;
+        status.classList.remove("hidden");
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Anti-spam 1: honeypot ingevuld?
+        if (form._honey && form._honey.value) return;
+        // Anti-spam 2: form ingediend binnen 3s na laden? = bot
+        if (Date.now() - loadedAt < 3000) {
+          show("Even rustig aan, vul het formulier zorgvuldig in.", false);
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Verzenden...";
+
+        try {
+          const data = new FormData(form);
+          // FormSubmit AJAX wil JSON, geen multipart
+          const obj = {};
+          data.forEach((v, k) => { obj[k] = v; });
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify(obj),
+          });
+          const json = await res.json().catch(() => ({}));
+          if (res.ok && (json.success === "true" || json.success === true)) {
+            form.reset();
+            show("✓ Bedankt, uw bericht is verzonden. We lezen het en antwoorden waar mogelijk.", true);
+            btn.textContent = "Verzonden";
+          } else {
+            show("Er ging iets mis bij het verzenden. Probeer het over een paar minuten opnieuw.", false);
+            btn.disabled = false;
+            btn.textContent = "Verstuur bericht";
+          }
+        } catch (err) {
+          show("Geen verbinding. Probeer het over een paar minuten opnieuw.", false);
+          btn.disabled = false;
+          btn.textContent = "Verstuur bericht";
+        }
+      });
+    })();
+  </script>
 </Layout>
