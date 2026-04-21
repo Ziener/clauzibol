@@ -108,20 +108,20 @@ const allJsonLd = jsonLd
   </head>
   <body class="min-h-screen flex flex-col">
     <header class="border-b border-white/5">
-      <div class="max-w-6xl mx-auto px-6 py-5 flex flex-wrap items-center gap-4">
-        <a href="/" class="flex items-center gap-3 group mr-auto">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex items-center gap-3 sm:gap-4">
+        <a href="/" class="flex items-center gap-3 group mr-auto shrink min-w-0">
           <img src="/logo.svg" alt="Clauzibol logo" width="40" height="40" class="shrink-0" />
-          <div class="leading-tight">
+          <div class="leading-tight hidden sm:block">
             <div class="serif text-xl text-cream group-hover:text-gold transition" style="color:var(--color-cream)">Clauzibol</div>
             <div class="text-[11px] uppercase tracking-[0.2em]" style="color:var(--color-gold-soft)">Verzegelde profetie</div>
           </div>
         </a>
-        <nav class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm" style="color:var(--color-gold-soft)">
+        <nav class="flex items-center gap-x-3 sm:gap-x-5 text-xs sm:text-sm whitespace-nowrap" style="color:var(--color-gold-soft)">
           <a href="/">Home</a>
-          <a href="/over">Over Clauzibol</a>
+          <a href="/over">Over</a>
           <a href="/blogs">Blogs</a>
           <a href="/faq">FAQ</a>
-          <a href="/contact" class="px-3 py-1.5 rounded border" style="border-color:var(--color-gold);color:var(--color-gold)">Contact</a>
+          <a href="/contact" class="px-2.5 sm:px-3 py-1.5 rounded border" style="border-color:var(--color-gold);color:var(--color-gold)">Contact</a>
         </nav>
       </div>
     </header>
