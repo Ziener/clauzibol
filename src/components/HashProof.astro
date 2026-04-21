@@ -1,0 +1,61 @@
+---
+import { weeks, isUnlocked } from "../data/weeks";
+import manifestJson from "../../public/sealed/manifest.json";
+
+const manifest = manifestJson as {
+  sealedAt: string;
+  publishedManifest: string;
+  openTimestamps: string;
+  entries: { week: number; sha256: string; file: string }[];
+};
+---
+<section class="max-w-5xl mx-auto px-6 py-16">
+  <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">Het bewijs vooraf</p>
+  <h2 class="serif text-3xl md:text-4xl mt-3 mb-4" style="color:var(--color-cream)">52 vingerafdrukken, vastgelegd op 20 april 2026</h2>
+
+  <p class="leading-relaxed opacity-90 mb-3">
+    Elk van de 52 brieven heeft een unieke <strong>SHA-256 hash</strong> — een getal van 64 tekens
+    dat verandert als één komma in de brief wijzigt. Wie deze week een slot open ziet gaan, kan
+    zelf de hash berekenen van de vrijgegeven tekst en vergelijken met de hash hieronder. Komen ze
+    overeen? Dan is de tekst <strong>ongewijzigd sinds 20 april 2026</strong>.
+  </p>
+  <p class="leading-relaxed opacity-90 mb-8">
+    Extra laag: het volledige hash-manifest is verankerd in de Bitcoin-blockchain via
+    <a href="https://opentimestamps.org/" target="_blank" rel="noopener">OpenTimestamps</a>.
+    <a href={manifest.publishedManifest} download>Download het manifest (.txt)</a> ·
+    <a href={manifest.openTimestamps} download>Download het Bitcoin-bewijs (.ots)</a>.
+  </p>
+
+  <details class="rounded-lg border" style="border-color:rgba(184,134,11,0.25)">
+    <summary class="cursor-pointer p-4 serif text-lg" style="color:var(--color-cream)">
+      Bekijk alle 52 hashes
+    </summary>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-left" style="color:var(--color-gold)">
+            <th class="px-4 py-2 font-normal text-xs uppercase tracking-widest">Week</th>
+            <th class="px-4 py-2 font-normal text-xs uppercase tracking-widest">Vrijgave</th>
+            <th class="px-4 py-2 font-normal text-xs uppercase tracking-widest">SHA-256 (eerste 16)</th>
+            <th class="px-4 py-2 font-normal text-xs uppercase tracking-widest">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {weeks.map((w) => {
+            const entry = manifest.entries.find((e) => e.week === w.number);
+            const open = isUnlocked(w);
+            const datum = new Date(w.unlockISO).toLocaleDateString("nl-NL", { day: "2-digit", month: "short", year: "numeric" });
+            return (
+              <tr class="border-t" style="border-color:rgba(255,255,255,0.05)">
+                <td class="px-4 py-2 opacity-80">{String(w.number).padStart(2, "0")}</td>
+                <td class="px-4 py-2 opacity-80">{datum}</td>
+                <td class="px-4 py-2 font-mono text-xs" style="color:var(--color-gold-soft)">{entry?.sha256.slice(0, 16) ?? "—"}</td>
+                <td class="px-4 py-2">{open ? "🔓" : "🔒"}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>

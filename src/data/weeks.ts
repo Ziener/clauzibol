@@ -31,6 +31,15 @@ function amsterdam7amISO(weekIndex: number): string {
   return new Date(Date.UTC(y, m, day, 5, 0, 0)).toISOString();
 }
 
+// Echte SHA-256 hashes van de 52 verzegelde plaintexts (publiek vastgelegd 20 april 2026,
+// verankerd op Bitcoin via OpenTimestamps in /HASH-MANIFEST.txt.ots).
+import manifestJson from "../../public/sealed/manifest.json";
+const HASH_BY_WEEK: Record<number, string> = Object.fromEntries(
+  (manifestJson as { entries: { week: number; sha256: string }[] }).entries.map(
+    (e) => [e.week, e.sha256]
+  )
+);
+
 // Titels zijn verzegeld. Echte titel komt tevoorschijn bij unlock
 // (uit de ontsleutelde markdown-frontmatter van het .tlock-bestand).
 export const weeks: Week[] = Array.from({ length: 52 }, (_, i) => ({
@@ -38,7 +47,7 @@ export const weeks: Week[] = Array.from({ length: 52 }, (_, i) => ({
   unlockISO: amsterdam7amISO(i),
   title: "Verzegeld",
   slug: `week-${String(i + 1).padStart(2, "0")}`,
-  hash: `sha256:placeholder-${String(i + 1).padStart(2, "0")}`,
+  hash: HASH_BY_WEEK[i + 1] ?? "",
 }));
 
 export function isUnlocked(w: Week, now = Date.now()): boolean {

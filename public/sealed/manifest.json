@@ -1,0 +1,269 @@
+{
+  "chain": "drand-mainnet",
+  "hashAlgo": "sha256",
+  "sealedAt": "2026-04-20",
+  "publishedManifest": "/HASH-MANIFEST.txt",
+  "openTimestamps": "/HASH-MANIFEST.txt.ots",
+  "entries": [
+    {
+      "week": 1,
+      "sha256": "75a6e0624bf00347c59cc5ddbf7321ff0ddd50915339f87ff660d009e83e609f",
+      "file": "week-01.tlock"
+    },
+    {
+      "week": 2,
+      "sha256": "8861ec54126cd665fc5c930ff449004009a97cac2e7727638dcb8fe066439e1b",
+      "file": "week-02.tlock"
+    },
+    {
+      "week": 3,
+      "sha256": "36569136e6326696f110a21f350b980e9a2a0573fab6b49b965339a27f748bee",
+      "file": "week-03.tlock"
+    },
+    {
+      "week": 4,
+      "sha256": "4377518c3dfefb431cdc4773434f25d5fc2f1bd24fcb12b874384526069a6f71",
+      "file": "week-04.tlock"
+    },
+    {
+      "week": 5,
+      "sha256": "019d6c33769fc51ff7fbda4664d129e759b3b1bf688d5c507ceaa60566682788",
+      "file": "week-05.tlock"
+    },
+    {
+      "week": 6,
+      "sha256": "c032fbd40e0ba3a9fcb4aba72fd5277c56f38b5a54911ddf45501da4ba2c57d0",
+      "file": "week-06.tlock"
+    },
+    {
+      "week": 7,
+      "sha256": "9aeb0934242bb9d43729b9fc5c1dc9bc437d947526274dbadd27e62498f3ab65",
+      "file": "week-07.tlock"
+    },
+    {
+      "week": 8,
+      "sha256": "12dc9d0e01511bef67daeb76fe3b0f7c51f395c240af957934e0a0f8a623ab85",
+      "file": "week-08.tlock"
+    },
+    {
+      "week": 9,
+      "sha256": "9dbaf9524eeba80ae55f2683b0676993562205d4b6014a762f1d250ca1641ff2",
+      "file": "week-09.tlock"
+    },
+    {
+      "week": 10,
+      "sha256": "d77aec4e1a8870f3887d60e5d30712803811ea3bdac53dbe4676f792b093f256",
+      "file": "week-10.tlock"
+    },
+    {
+      "week": 11,
+      "sha256": "52f3bf12329a21ad92d0c0ca2c6dba8d5ef94e726648b704f1b6f62f745b6a31",
+      "file": "week-11.tlock"
+    },
+    {
+      "week": 12,
+      "sha256": "3f3c17b953960bbb0d5fbba25b8393def19c287d28aee3ada451d38268f19791",
+      "file": "week-12.tlock"
+    },
+    {
+      "week": 13,
+      "sha256": "42d7147a954b02f87e34168ff2da1faef515bbea2e0482f9057755758afbebcd",
+      "file": "week-13.tlock"
+    },
+    {
+      "week": 14,
+      "sha256": "181a729abf645d0affa08ff2e9d5e2ea06613bf6c4fdd8d191e91a467dfe2bea",
+      "file": "week-14.tlock"
+    },
+    {
+      "week": 15,
+      "sha256": "b93dd653c6acc12ca2c091840b7aebcf6f17d7482a84ac02cac9e2a992d1db09",
+      "file": "week-15.tlock"
+    },
+    {
+      "week": 16,
+      "sha256": "12d54811295325e2bfaad55528c597aaaa17f787cbeed27dbc7173e27d555fd1",
+      "file": "week-16.tlock"
+    },
+    {
+      "week": 17,
+      "sha256": "2d2277b24c9640de625ee2a2bafca77021609c45e9cbc2c843b188e698e2bfac",
+      "file": "week-17.tlock"
+    },
+    {
+      "week": 18,
+      "sha256": "ccfe6b06210c6a3cccb1c25c530ca41f3d79a5f14b79590ebf6caa0a9b724e4a",
+      "file": "week-18.tlock"
+    },
+    {
+      "week": 19,
+      "sha256": "9bf4728cd302fda4eddb6c8c02deaa8ef78ebddd0b668e0fd9974b5f7ea20e64",
+      "file": "week-19.tlock"
+    },
+    {
+      "week": 20,
+      "sha256": "290eadd03c593f423352a6a6ae257030c284560b75884bf85b9c65373bdd6cbc",
+      "file": "week-20.tlock"
+    },
+    {
+      "week": 21,
+      "sha256": "103e67d197138f06172361fed1eccbdfb93419bdb62601e5b013c5b3604f1753",
+      "file": "week-21.tlock"
+    },
+    {
+      "week": 22,
+      "sha256": "8939528799e8e77c8966e9ced8f1d3f01caef59d277e00733d388dae0cddf334",
+      "file": "week-22.tlock"
+    },
+    {
+      "week": 23,
+      "sha256": "cec448db64d9a568358fcb582b2ea7575d5e1f445819228fd3939751eff3d409",
+      "file": "week-23.tlock"
+    },
+    {
+      "week": 24,
+      "sha256": "e0320b6fbf4662233ce23ffe949973358ec2aed268fec65f786cc0113ce7c2f6",
+      "file": "week-24.tlock"
+    },
+    {
+      "week": 25,
+      "sha256": "1996ac883b9317f8a3d224ca94f70817039dc189a85ab81fc0da8cb82f8ac8e5",
+      "file": "week-25.tlock"
+    },
+    {
+      "week": 26,
+      "sha256": "ea016b015cf9818c545da5cd908743ab935db34840aebaefff12da1ef521c75e",
+      "file": "week-26.tlock"
+    },
+    {
+      "week": 27,
+      "sha256": "e3ed01d84e1a014deae86941b2fecf45dad3a3dc2db6d497dbfc18e9be5c28cf",
+      "file": "week-27.tlock"
+    },
+    {
+      "week": 28,
+      "sha256": "80fa7b64a2d95c41fe48aa44f6f04bbb21dab910be98e63cdb65bd5148df5a8b",
+      "file": "week-28.tlock"
+    },
+    {
+      "week": 29,
+      "sha256": "19e5c7e9521ae5c7848139ad795556822c7f1546243a992b580f68bf5dc1f605",
+      "file": "week-29.tlock"
+    },
+    {
+      "week": 30,
+      "sha256": "23e5bd8192d1dda962b32aeb9aafdd85224dc3b60c54848b1216c6717f3819f6",
+      "file": "week-30.tlock"
+    },
+    {
+      "week": 31,
+      "sha256": "f0a2503b8e97f134ff80f24fa3ee2492330df79ec01fbb61c8bc8f8924e512be",
+      "file": "week-31.tlock"
+    },
+    {
+      "week": 32,
+      "sha256": "fdf33d4d8f9900f017c71be25e634c38d4dfdbeeff3c4205c26a5171f6089d2e",
+      "file": "week-32.tlock"
+    },
+    {
+      "week": 33,
+      "sha256": "a1aeaafea7b0977effc7587bf4eb91325cf6864548526799c35db0605d72acc4",
+      "file": "week-33.tlock"
+    },
+    {
+      "week": 34,
+      "sha256": "ea0814792957a30125b3471ddcd93f5b741994f09f06c6aefff236d50227f2ff",
+      "file": "week-34.tlock"
+    },
+    {
+      "week": 35,
+      "sha256": "c6d1a04d5e3dc2965b6485c7eb0560b012d9067631115c6346d2a12bc96acd61",
+      "file": "week-35.tlock"
+    },
+    {
+      "week": 36,
+      "sha256": "2b45746f57f940f33b0c97eee765427037791f0300b033122874ce147c1381c4",
+      "file": "week-36.tlock"
+    },
+    {
+      "week": 37,
+      "sha256": "637dab5d3dcb26da84aac9fc9a0af33bb0ee5a675ba9664db99632bdba99d548",
+      "file": "week-37.tlock"
+    },
+    {
+      "week": 38,
+      "sha256": "5ec19e69afe94e491005d9f89d1137235063ed789c11fdfac202205917f134d9",
+      "file": "week-38.tlock"
+    },
+    {
+      "week": 39,
+      "sha256": "fc5db0c0898146a2d05aca61f708b44b29efb87dd9f128528611db9712e7c690",
+      "file": "week-39.tlock"
+    },
+    {
+      "week": 40,
+      "sha256": "29025b1577f04b9833d3e7bcf018bf646e721638afde38bebc7fa07eeb5a02a6",
+      "file": "week-40.tlock"
+    },
+    {
+      "week": 41,
+      "sha256": "e7ac24b770eebfd29bb1e390974e66f10e5ef62393250d84a448b85d56039243",
+      "file": "week-41.tlock"
+    },
+    {
+      "week": 42,
+      "sha256": "1f8d828271c9a4b17b714c79b8cfa362fc9b9c185400e59716b147ec78f82a46",
+      "file": "week-42.tlock"
+    },
+    {
+      "week": 43,
+      "sha256": "e254ac6f5a7e9e3c7ec720d593d82c2703513f64b02a6ba2b336189db724d2cb",
+      "file": "week-43.tlock"
+    },
+    {
+      "week": 44,
+      "sha256": "c674c768b5cfad7fa0c535d64275bec1e908a0c0f97ac2b095459830000ffc76",
+      "file": "week-44.tlock"
+    },
+    {
+      "week": 45,
+      "sha256": "9b8fa13cb711341d933e90fa3c897e7566b35f0bbdeae6c623a77b002d635ae2",
+      "file": "week-45.tlock"
+    },
+    {
+      "week": 46,
+      "sha256": "57090b18742c54c541061c47af52e7e450abeed2a9463ccc2b94e682dd9836f9",
+      "file": "week-46.tlock"
+    },
+    {
+      "week": 47,
+      "sha256": "551b5c4cfd0c9593944b36a4124fe10f9a6748f680cd056b88765c27686a35c0",
+      "file": "week-47.tlock"
+    },
+    {
+      "week": 48,
+      "sha256": "9edf9af2a9edb611bc3e5a993f1e1d18751c0aa2daddfa5c253b2984bfbe5b14",
+      "file": "week-48.tlock"
+    },
+    {
+      "week": 49,
+      "sha256": "bff24729f4d9d60fcfb130d838010449a77f896d66b35aac14b4b4088669221d",
+      "file": "week-49.tlock"
+    },
+    {
+      "week": 50,
+      "sha256": "2e78a2f0212215ba466a4d3788c16cef4f5362a047808d1e54b424290b0d1c64",
+      "file": "week-50.tlock"
+    },
+    {
+      "week": 51,
+      "sha256": "b3201fc0ca48b860f12bde067e359f5330d7061d69391bee3f86fcb64f35ad47",
+      "file": "week-51.tlock"
+    },
+    {
+      "week": 52,
+      "sha256": "7a96e58de003d5549ad2f9c80a72682c3ecf3892ddb3ff599116b5547c9b3ac4",
+      "file": "week-52.tlock"
+    }
+  ]
+}

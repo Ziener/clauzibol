@@ -11,16 +11,18 @@ const { week } = Astro.props;
 const open = isUnlocked(week);
 const prev = weeks[week.number - 2];
 const next = weeks[week.number];
+const tlockUrl = `/sealed/${week.slug}.tlock`;
 ---
-<Layout title={open ? `Week ${week.number} — ${week.title} · Clauzibol` : `Week ${week.number} — Verzegeld · Clauzibol`}>
+<Layout title={open ? `Week ${week.number} · Clauzibol` : `Week ${week.number} — Verzegeld · Clauzibol`}>
   <article class="max-w-3xl mx-auto px-6 py-16">
     <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">
       Week {String(week.number).padStart(2, "0")} · {formatNL(week.unlockISO)}
     </p>
-    {open
-      ? <h1 class="serif text-4xl md:text-5xl mt-3 mb-8" style="color:var(--color-cream)">{week.title}</h1>
-      : <h1 class="serif text-4xl md:text-5xl mt-3 mb-8 italic opacity-70" style="color:var(--color-cream)">Verzegeld</h1>
-    }
+    <h1
+      id="blog-title"
+      class={`serif text-4xl md:text-5xl mt-3 mb-8 ${open ? "" : "italic opacity-70"}`}
+      style="color:var(--color-cream)"
+    >{open ? "Bezig met ontsleutelen…" : "Verzegeld"}</h1>
 
     {!open && (
       <div class="rounded-xl border p-8 mb-10 text-center" style="border-color:var(--color-gold);background:rgba(184,134,11,0.05)">
@@ -33,10 +35,13 @@ const next = weeks[week.number];
         <div class="flex justify-center mb-8">
           <Countdown target={week.unlockISO} />
         </div>
-        <div class="text-xs uppercase tracking-widest mb-2 opacity-70">SHA-256 hash (vooraf vastgelegd)</div>
+        <div class="text-xs uppercase tracking-widest mb-2 opacity-70">SHA-256 hash (vooraf vastgelegd, 20 april 2026)</div>
         <code class="block break-all text-xs px-4 py-3 rounded font-mono" style="background:rgba(0,0,0,0.3);color:var(--color-gold-soft)">{week.hash}</code>
         <p class="text-xs opacity-60 mt-4">
-          Deze hash is op 20 april 2026 vastgelegd via OpenTimestamps op de Bitcoin-blockchain.
+          Deze hash is op 20 april 2026 vastgelegd. Het complete manifest van alle 52 hashes
+          is verankerd op de Bitcoin-blockchain via OpenTimestamps
+          (<a href="/HASH-MANIFEST.txt" class="underline">manifest</a> ·
+           <a href="/HASH-MANIFEST.txt.ots" class="underline">.ots-bewijs</a>).
           De tekst die straks verschijnt produceert exact deze vingerafdruk — anders is er gerommeld.
         </p>
       </div>
@@ -44,34 +49,17 @@ const next = weeks[week.number];
 
     {open && (
       <>
-        <div class="prose-clauzibol leading-relaxed opacity-95 space-y-5" data-blog-body>
-          <p class="italic opacity-80">
-            <em>[Plaatsvervangende tekst — wordt automatisch vervangen door de ontsleutelde inhoud op {formatNL(week.unlockISO)}.]</em>
-          </p>
-          <p>
-            Hier verschijnt het vrijgegeven blog. Het wordt opgehaald via de tlock-decryptie van het bestand
-            <code>week-{String(week.number).padStart(2, "0")}.tlock</code> en in deze container ingevoegd.
-          </p>
-          <blockquote class="border-l-2 pl-5 italic" style="border-color:var(--color-gold);color:var(--color-gold-soft)">
-            "Bijbeltekst uit de Herziene Statenvertaling verschijnt hier (boek hoofdstuk:vers)."
-          </blockquote>
-          <p>
-            Onderaan elk vrijgegeven blog: een korte bemoediging en een gebed.
-          </p>
-        </div>
+        <article id="blog-body" class="prose-clauzibol leading-relaxed opacity-95 space-y-5">
+          <p class="opacity-70 italic">Inhoud wordt geladen en ontsleuteld in je browser…</p>
+        </article>
 
-        <div class="mt-12 rounded-lg border p-6" style="border-color:rgba(184,134,11,0.3);background:rgba(184,134,11,0.04)">
+        <div id="verify-box" class="mt-12 rounded-lg border p-6 hidden" style="border-color:rgba(184,134,11,0.3);background:rgba(184,134,11,0.04)">
           <div class="text-xs uppercase tracking-widest mb-2" style="color:var(--color-gold)">Verifieer deze tekst</div>
-          <p class="text-sm opacity-80 mb-3">
-            Originele hash (vooraf vastgelegd):
-          </p>
+          <p class="text-sm opacity-80 mb-2">Originele hash (vastgelegd 20 april 2026):</p>
           <code class="block break-all text-xs px-3 py-2 rounded font-mono mb-3" style="background:rgba(0,0,0,0.3);color:var(--color-gold-soft)">{week.hash}</code>
-          <button
-            data-verify
-            class="px-4 py-2 rounded text-sm border"
-            style="border-color:var(--color-gold);color:var(--color-gold)"
-          >Bereken hash van zichtbare tekst</button>
-          <p data-verify-result class="text-sm mt-3 opacity-90"></p>
+          <p class="text-sm opacity-80 mb-2">Berekend in je browser uit de hierboven getoonde tekst:</p>
+          <code id="computed-hash" class="block break-all text-xs px-3 py-2 rounded font-mono mb-3" style="background:rgba(0,0,0,0.3);color:var(--color-gold-soft)">…</code>
+          <p id="verify-status" class="text-sm font-semibold"></p>
         </div>
 
         <p class="mt-10 text-xs italic opacity-70">
@@ -89,18 +77,91 @@ const next = weeks[week.number];
     </nav>
   </article>
 
-  <script>
-    const btn = document.querySelector<HTMLButtonElement>("[data-verify]");
-    const out = document.querySelector<HTMLElement>("[data-verify-result]");
-    const body = document.querySelector<HTMLElement>("[data-blog-body]");
-    if (btn && out && body) {
-      btn.addEventListener("click", async () => {
-        const text = body.innerText.trim();
-        const enc = new TextEncoder().encode(text);
-        const buf = await crypto.subtle.digest("SHA-256", enc);
-        const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-        out.textContent = "sha256:" + hex;
-      });
+  <script type="module" define:vars={{ tlockUrl, expectedHash: week.hash, weekNumber: week.number, isOpenAtBuild: open }}>
+    if (!isOpenAtBuild) {
+      // verzegeld bij build → niets te doen client-side
+    } else {
+      const titleEl = document.getElementById("blog-title");
+      const bodyEl = document.getElementById("blog-body");
+      const verifyBox = document.getElementById("verify-box");
+      const computedEl = document.getElementById("computed-hash");
+      const statusEl = document.getElementById("verify-status");
+
+      const setError = (msg) => {
+        titleEl.textContent = "Ontsleuteling mislukt";
+        bodyEl.innerHTML = `<p class="opacity-80">${msg}</p>`;
+      };
+
+      try {
+        const [{ timelockDecrypt, mainnetClient }, matterMod] = await Promise.all([
+          import("https://esm.sh/tlock-js@0.9.0"),
+          import("https://esm.sh/gray-matter@4.0.3?bundle"),
+        ]);
+        const matter = matterMod.default;
+
+        const res = await fetch(tlockUrl);
+        if (!res.ok) throw new Error(`Kon ${tlockUrl} niet laden (${res.status})`);
+        const ciphertext = new Uint8Array(await res.arrayBuffer());
+
+        const client = mainnetClient();
+        const plaintextBuf = await timelockDecrypt(ciphertext, client);
+        const plaintext = new TextDecoder().decode(plaintextBuf);
+
+        // SHA-256 verificatie
+        const enc = new TextEncoder().encode(plaintext);
+        const digest = await crypto.subtle.digest("SHA-256", enc);
+        const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, "0")).join("");
+
+        const parsed = matter(plaintext);
+        const title = parsed.data?.titel || parsed.data?.title || `Week ${weekNumber}`;
+        titleEl.textContent = title;
+        document.title = `${title} · Clauzibol`;
+
+        // Markdown → simpele HTML render (paragraphs, blockquotes, headings, lists)
+        const md = parsed.content.trim();
+        const html = md
+          .split(/\n{2,}/)
+          .map(block => {
+            block = block.trim();
+            if (!block) return "";
+            if (block.startsWith("### ")) return `<h3 class="serif text-xl mt-6 mb-2" style="color:var(--color-gold)">${block.slice(4)}</h3>`;
+            if (block.startsWith("## ")) return `<h2 class="serif text-2xl mt-8 mb-3" style="color:var(--color-gold)">${block.slice(3)}</h2>`;
+            if (block.startsWith("# ")) return `<h2 class="serif text-2xl mt-8 mb-3" style="color:var(--color-gold)">${block.slice(2)}</h2>`;
+            if (block.startsWith("> ")) {
+              const txt = block.split("\n").map(l => l.replace(/^>\s?/, "")).join(" ");
+              return `<blockquote class="border-l-2 pl-5 italic" style="border-color:var(--color-gold);color:var(--color-gold-soft)">${escapeHtml(txt)}</blockquote>`;
+            }
+            if (/^[-*]\s/.test(block)) {
+              const items = block.split("\n").map(l => `<li>${escapeHtml(l.replace(/^[-*]\s+/, ""))}</li>`).join("");
+              return `<ul class="list-disc pl-6 space-y-1">${items}</ul>`;
+            }
+            return `<p>${escapeHtml(block).replace(/\n/g, "<br/>")}</p>`;
+          })
+          .join("\n");
+        bodyEl.innerHTML = html;
+
+        // Verifieer hash
+        verifyBox.classList.remove("hidden");
+        computedEl.textContent = hex;
+        if (hex === expectedHash) {
+          statusEl.textContent = "✓ Hash komt overeen — tekst ongewijzigd sinds 20 april 2026.";
+          statusEl.style.color = "var(--color-gold)";
+        } else {
+          statusEl.textContent = "⚠️ Hash komt NIET overeen. Dit zou onmogelijk moeten zijn — neem contact op.";
+          statusEl.style.color = "#ff8888";
+        }
+      } catch (err) {
+        const isTooEarly = String(err).match(/round|future|too early|not yet/i);
+        if (isTooEarly) {
+          setError("De drand-sleutel voor deze week is nog niet vrijgegeven. Probeer het over een paar minuten opnieuw.");
+        } else {
+          setError("Onverwachte fout: " + (err?.message || err));
+        }
+      }
+
+      function escapeHtml(s) {
+        return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+      }
     }
   </script>
 </Layout>

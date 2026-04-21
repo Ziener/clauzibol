@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import HashProof from "../components/HashProof.astro";
 ---
 <Layout title="Verificatie — Clauzibol">
   <article class="max-w-3xl mx-auto px-6 py-16">
@@ -46,7 +47,8 @@ import Layout from "../layouts/Layout.astro";
       De broncode van deze site, het versleutelings-script en de hash-manifest staan publiek op GitHub:
     </p>
     <p class="leading-relaxed">
-      <a href="https://github.com/clauzibol" target="_blank" rel="noopener" class="underline">github.com/clauzibol</a>
+      <a href="https://github.com/Ziener/clauzibol" target="_blank" rel="noopener" class="underline">github.com/Ziener/clauzibol</a>
     </p>
   </article>
+  <HashProof />
 </Layout>
