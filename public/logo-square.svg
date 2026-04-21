@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="sqBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0e27"/>
+      <stop offset="100%" stop-color="#111937"/>
+    </linearGradient>
+    <linearGradient id="sqGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8D5B7"/>
+      <stop offset="100%" stop-color="#B8860B"/>
+    </linearGradient>
+    <linearGradient id="sqLockBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4A849"/>
+      <stop offset="100%" stop-color="#8B6508"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Achtergrond -->
+  <rect width="1080" height="1080" fill="url(#sqBg)"/>
+
+  <!-- Subtiele sterren -->
+  <g fill="#f5f1e8" opacity="0.45">
+    <circle cx="120" cy="160" r="1.3"/>
+    <circle cx="260" cy="100" r="0.9"/>
+    <circle cx="420" cy="180" r="1"/>
+    <circle cx="620" cy="140" r="0.8"/>
+    <circle cx="820" cy="200" r="1.2"/>
+    <circle cx="970" cy="120" r="0.9"/>
+    <circle cx="80" cy="420" r="1"/>
+    <circle cx="1000" cy="480" r="0.8"/>
+    <circle cx="100" cy="780" r="1.1"/>
+    <circle cx="980" cy="720" r="0.9"/>
+    <circle cx="200" cy="980" r="0.8"/>
+    <circle cx="880" cy="960" r="1"/>
+    <circle cx="540" cy="60" r="0.9"/>
+    <circle cx="60" cy="560" r="0.9"/>
+    <circle cx="1020" cy="900" r="1.1"/>
+  </g>
+
+  <!-- Gouden kader-ornament: hoeklijntjes op 60px uit elke hoek -->
+  <g stroke="url(#sqGold)" stroke-width="1.5" opacity="0.5">
+    <line x1="60" y1="60" x2="110" y2="60"/>
+    <line x1="60" y1="60" x2="60" y2="110"/>
+    <line x1="1020" y1="60" x2="970" y2="60"/>
+    <line x1="1020" y1="60" x2="1020" y2="110"/>
+    <line x1="60" y1="1020" x2="110" y2="1020"/>
+    <line x1="60" y1="1020" x2="60" y2="970"/>
+    <line x1="1020" y1="1020" x2="970" y2="1020"/>
+    <line x1="1020" y1="1020" x2="1020" y2="970"/>
+  </g>
+
+  <!-- ═══ LOGO: hangslot met kruis, centraal, groot (ca 360x360) ═══ -->
+  <g transform="translate(540 400) scale(3.0)">
+    <g transform="translate(-60 -60)">
+      <path d="M34 56 V42 a26 26 0 0 1 52 0 V56"
+            stroke="url(#sqGold)" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <rect x="24" y="56" width="72" height="64" rx="6" fill="url(#sqLockBody)"/>
+      <rect x="56" y="70" width="8" height="40" fill="#0a0e27"/>
+      <rect x="46" y="82" width="28" height="8" fill="#0a0e27"/>
+    </g>
+  </g>
+
+  <!-- Gouden scheidingslijn met diamant -->
+  <g transform="translate(540 625)">
+    <line x1="-200" y1="0" x2="-14" y2="0" stroke="url(#sqGold)" stroke-width="1" opacity="0.5"/>
+    <line x1="14" y1="0" x2="200" y2="0" stroke="url(#sqGold)" stroke-width="1" opacity="0.5"/>
+    <path d="M -7 0 L 0 -7 L 7 0 L 0 7 Z" fill="url(#sqGold)" opacity="0.65"/>
+  </g>
+
+  <!-- Woordmerk "Clauzibol" (groter) -->
+  <text x="540" y="815" text-anchor="middle"
+        font-family="Georgia, 'Playfair Display', serif"
+        font-size="150" font-weight="500"
+        fill="#f5f1e8">Clauzibol</text>
+
+  <!-- Ondertitel "VERZEGELDE PROFETIE" (groter) -->
+  <text x="540" y="890" text-anchor="middle"
+        font-family="Inter, Arial, sans-serif"
+        font-size="34" letter-spacing="16"
+        fill="url(#sqGold)">VERZEGELDE PROFETIE</text>
+</svg>

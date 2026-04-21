@@ -18,8 +18,11 @@ const {
 } = Astro.props;
 
 const siteUrl = "https://www.clauzibol.nl";
+// Version-bust voor social-scrapers (WhatsApp/Facebook/Twitter cachen per URL).
+// Verhoog dit getal als de og-image verandert zodat oude previews worden ververst.
+const OG_IMAGE_VERSION = "2";
 const canonical = new URL(Astro.url.pathname, siteUrl).toString();
-const ogImageUrl = new URL(ogImage, siteUrl).toString();
+const ogImageUrl = new URL(`${ogImage}?v=${OG_IMAGE_VERSION}`, siteUrl).toString();
 
 // Default site-wide JSON-LD: WebSite + Organization. Per-pagina schemas
 // (Article, FAQPage, BreadcrumbList) worden via de `jsonLd` prop bijgevoegd.
