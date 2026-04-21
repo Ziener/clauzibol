@@ -13,7 +13,7 @@ const prev = weeks[week.number - 2];
 const next = weeks[week.number];
 const tlockUrl = `/sealed/${week.slug}.tlock`;
 ---
-<Layout title={open ? `Week ${week.number} · Clauzibol` : `Week ${week.number} — Verzegeld · Clauzibol`}>
+<Layout title={open ? `Week ${week.number} · Clauzibol` : `Week ${week.number}, Verzegeld · Clauzibol`}>
   <article class="max-w-3xl mx-auto px-6 py-16">
     <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">
       Week {String(week.number).padStart(2, "0")} · {formatNL(week.unlockISO)}
@@ -42,7 +42,7 @@ const tlockUrl = `/sealed/${week.slug}.tlock`;
           is verankerd op de Bitcoin-blockchain via OpenTimestamps
           (<a href="/HASH-MANIFEST.txt" class="underline">manifest</a> ·
            <a href="/HASH-MANIFEST.txt.ots" class="underline">.ots-bewijs</a>).
-          De tekst die straks verschijnt produceert exact deze vingerafdruk — anders is er gerommeld.
+          De tekst die straks verschijnt produceert exact deze vingerafdruk, anders is er gerommeld.
         </p>
       </div>
     )}
@@ -144,10 +144,10 @@ const tlockUrl = `/sealed/${week.slug}.tlock`;
         verifyBox.classList.remove("hidden");
         computedEl.textContent = hex;
         if (hex === expectedHash) {
-          statusEl.textContent = "✓ Hash komt overeen — tekst ongewijzigd sinds 20 april 2026.";
+          statusEl.textContent = "✓ Hash komt overeen, tekst ongewijzigd sinds 20 april 2026.";
           statusEl.style.color = "var(--color-gold)";
         } else {
-          statusEl.textContent = "⚠️ Hash komt NIET overeen. Dit zou onmogelijk moeten zijn — neem contact op.";
+          statusEl.textContent = "⚠️ Hash komt NIET overeen. Dit zou onmogelijk moeten zijn, neem contact op.";
           statusEl.style.color = "#ff8888";
         }
       } catch (err) {
@@ -165,3 +165,7 @@ const tlockUrl = `/sealed/${week.slug}.tlock`;
     }
   </script>
 </Layout>
+t>
+t>
+t>
+t>

@@ -1,19 +1,19 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-// FormSubmit.co — gratis, geen account nodig.
+// FormSubmit.co, gratis, geen account nodig.
 // Bij eerste verzending stuurt FormSubmit een verificatiemail naar dit adres;
 // klik daarin op "Confirm" om het formulier te activeren. Daarna komen alle
-// inzendingen binnen op info@clauzibol.nl.
-const FORM_ACTION = "https://formsubmit.co/info@clauzibol.nl";
+// inzendingen binnen op ziener@clauzibol.nl.
+const FORM_ACTION = "https://formsubmit.co/ziener@clauzibol.nl";
 ---
-<Layout title="Contact — Clauzibol">
+<Layout title="Contact, Clauzibol">
   <section class="max-w-2xl mx-auto px-6 py-16">
     <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">Contact</p>
     <h1 class="serif text-4xl md:text-5xl mt-3 mb-6" style="color:var(--color-cream)">Schrijf de ziener</h1>
     <p class="opacity-90 mb-10">
       Een vraag, een reactie, of getuigenis van iets wat u raakte? We lezen alles. We antwoorden waar mogelijk.
-      Uw woorden blijven van u — we publiceren niets zonder toestemming.
+      Uw woorden blijven van u, we publiceren niets zonder toestemming.
     </p>
 
     <form
@@ -82,12 +82,12 @@ const FORM_ACTION = "https://formsubmit.co/info@clauzibol.nl";
 
     {Astro.url.searchParams.get("verstuurd") && (
       <div class="mt-6 rounded-lg border p-4" style="border-color:var(--color-gold);background:rgba(184,134,11,0.1)">
-        <p style="color:var(--color-cream)">✓ Bedankt — uw bericht is verzonden. We lezen het en antwoorden waar mogelijk.</p>
+        <p style="color:var(--color-cream)">✓ Bedankt, uw bericht is verzonden. We lezen het en antwoorden waar mogelijk.</p>
       </div>
     )}
 
     <div class="mt-10 text-sm opacity-80 space-y-1">
-      <p>Of mail direct: <a href="mailto:info@clauzibol.nl">info@clauzibol.nl</a></p>
+      <p>Of mail direct: <a href="mailto:ziener@clauzibol.nl">ziener@clauzibol.nl</a></p>
       <p>Volg op: <a href="https://instagram.com/clauzibol" target="_blank" rel="noopener">Instagram</a> · <a href="https://facebook.com/clauzibol" target="_blank" rel="noopener">Facebook</a></p>
     </div>
   </section>

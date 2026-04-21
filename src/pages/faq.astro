@@ -10,44 +10,44 @@ const steps = [
   {
     n: "02",
     title: "De blogs werden in één geconcentreerde sessie geschreven",
-    body: "Claude (AI van Anthropic) schreef alle 52 blogs in één doorlopende sessie op 20 april 2026. Per blog: opening op een Nederlands haakje, vooruitblik (wereld → Nederland → u), waarschuwing, Bijbels licht uit de HSV, bemoediging en gebed. Aangericht aan u — Nederlander op een maandagochtend.",
+    body: "Claude (AI van Anthropic) schreef alle 52 blogs in één doorlopende sessie op 20 april 2026. Per blog: opening op een Nederlands haakje, vooruitblik (wereld → Nederland → u), waarschuwing, Bijbels licht uit de HSV, bemoediging en gebed. Aangericht aan u, Nederlander op een maandagochtend.",
   },
   {
     n: "03",
     title: "Direct na elke blog: SHA-256 + versleuteling + vernietiging",
-    body: "Zodra een blog af was, werd er één commando uitgevoerd: SHA-256 hash berekenen, versleutelen via drand/tlock voor de unlock-datum van die specifieke week, het ciphertext-bestand wegschrijven, en de plaintext lokaal eerst overschrijven met willekeurige bytes en dan verwijderen. De plaintext heeft daarna nergens meer bestaan — niet op disk, niet in de chatgeschiedenis (die werd gewist), niet in een back-up.",
+    body: "Zodra een blog af was, werd er één commando uitgevoerd: SHA-256 hash berekenen, versleutelen via drand/tlock voor de unlock-datum van die specifieke week, het ciphertext-bestand wegschrijven, en de plaintext lokaal eerst overschrijven met willekeurige bytes en dan verwijderen. De plaintext heeft daarna nergens meer bestaan, niet op disk, niet in de chatgeschiedenis (die werd gewist), niet in een back-up.",
   },
   {
     n: "04",
     title: "Time-lock encryption via drand quicknet",
-    body: "We gebruiken het quicknet-protocol van drand (League of Entropy). Elke blog is versleuteld voor een specifieke 'round' in de toekomst — week 1 opent 4 mei 2026 07:00 NL, week 52 opent 26 april 2027 07:00 NL. De decryptiesleutel ontstaat pas wanneer drand die round publiek uitzendt. Tot dat moment is decryptie wiskundig onmogelijk — voor iedereen, inclusief de maker en Anthropic.",
+    body: "We gebruiken het quicknet-protocol van drand (League of Entropy). Elke blog is versleuteld voor een specifieke 'round' in de toekomst, week 1 opent 4 mei 2026 07:00 NL, week 52 opent 26 april 2027 07:00 NL. De decryptiesleutel ontstaat pas wanneer drand die round publiek uitzendt. Tot dat moment is decryptie wiskundig onmogelijk, voor iedereen, inclusief de maker en Anthropic.",
   },
   {
     n: "05",
     title: "Hash-manifest publiek vastgelegd",
-    body: "De 52 SHA-256 hashes staan in public/sealed/manifest.json — publiek leesbaar via GitHub. Eén letter veranderen aan een blog levert een totaal andere hash. Bij vrijgave kun je zelf in je browser de SHA-256 van de getoonde tekst berekenen (knop 'Verifieer' onderaan elke blog) en vergelijken met de oorspronkelijke hash uit het manifest.",
+    body: "De 52 SHA-256 hashes staan in public/sealed/manifest.json, publiek leesbaar via GitHub. Eén letter veranderen aan een blog levert een totaal andere hash. Bij vrijgave kun je zelf in je browser de SHA-256 van de getoonde tekst berekenen (knop 'Verifieer' onderaan elke blog) en vergelijken met de oorspronkelijke hash uit het manifest.",
   },
   {
     n: "06",
     title: "OpenTimestamps op Bitcoin",
-    body: "Het complete hash-manifest wordt verankerd op de Bitcoin-blockchain via OpenTimestamps. Dat geeft onbetwistbaar bewijs: deze 52 hashes bestonden op 20 april 2026. Achteraf een blog bijschrijven, vervangen of stiekem aanpassen is onmogelijk — de hashes zouden niet meer kloppen, en het Bitcoin-bewijs zou ontbreken.",
+    body: "Het complete hash-manifest wordt verankerd op de Bitcoin-blockchain via OpenTimestamps. Dat geeft onbetwistbaar bewijs: deze 52 hashes bestonden op 20 april 2026. Achteraf een blog bijschrijven, vervangen of stiekem aanpassen is onmogelijk, de hashes zouden niet meer kloppen, en het Bitcoin-bewijs zou ontbreken.",
   },
   {
     n: "07",
     title: "Elke maandag opent automatisch één slot",
-    body: "Geen handmatige actie meer nodig. Op maandag 07:00 NL-tijd publiceert drand de sleutel voor die week. De website ontsleutelt het bijbehorende .tlock-bestand client-side in je browser, toont de tekst, en vergelijkt direct de hash met het manifest. Klopt de hash, dan zie je een groen vinkje. Klopt hij niet — onmogelijk, maar voor de zekerheid — dan een grote rode waarschuwing.",
+    body: "Geen handmatige actie meer nodig. Op maandag 07:00 NL-tijd publiceert drand de sleutel voor die week. De website ontsleutelt het bijbehorende .tlock-bestand client-side in je browser, toont de tekst, en vergelijkt direct de hash met het manifest. Klopt de hash, dan zie je een groen vinkje. Klopt hij niet, onmogelijk maar voor de zekerheid, dan een grote rode waarschuwing.",
   },
   {
     n: "08",
-    title: "Open broncode — controleer alles zelf",
-    body: "De volledige broncode van deze site, het versleutelings-script en het hash-manifest staan publiek op github.com/Ziener/clauzibol. Geen verborgen achterdeurtjes. Geen 'admin override'. Vraag een vriend met technische kennis om mee te lezen. Het experiment leeft van transparantie — verberg ik iets, dan stort het hele concept in.",
+    title: "Open broncode, controleer alles zelf",
+    body: "De volledige broncode van deze site, het versleutelings-script en het hash-manifest staan publiek op github.com/Ziener/clauzibol. Geen verborgen achterdeurtjes. Geen 'admin override'. Vraag een vriend met technische kennis om mee te lezen. Het experiment leeft van transparantie, verberg ik iets, dan stort het hele concept in.",
   },
 ];
 
 const faqs = [
   {
-    q: "Maar als jij — Rob — de versleuteling zelf doet, kun je dan niet stiekem aanpassen?",
-    a: "Nee. Het versleutelen gebeurt mét vernietiging van de plaintext, lokaal en direct. Vanaf dat moment heb ik alleen nog het ciphertext-bestand en de hash. Ik kan de blog niet meer ontsleutelen — drand laat het simpelweg niet toe. Wat in het manifest staat is wat er straks vrijkomt; iets anders is wiskundig uitgesloten."
+    q: "Maar als jij, Rob, de versleuteling zelf doet, kun je dan niet stiekem aanpassen?",
+    a: "Nee. Het versleutelen gebeurt mét vernietiging van de plaintext, lokaal en direct. Vanaf dat moment heb ik alleen nog het ciphertext-bestand en de hash. Ik kan de blog niet meer ontsleutelen, drand laat het simpelweg niet toe. Wat in het manifest staat is wat er straks vrijkomt; iets anders is wiskundig uitgesloten."
   },
   {
     q: "Hoe weten we zeker dat de blogs op 20 april 2026 zijn geschreven, en niet later?",
@@ -59,7 +59,7 @@ const faqs = [
   },
   {
     q: "Kan Anthropic (de maker van Claude) dan niet bij de tekst?",
-    a: "Nee. De plaintext bestond enkel tijdelijk in de chatsessie en is direct na versleuteling vernietigd. Anthropic bewaart geen chatgeschiedenis op een manier waar wij of zij later bij kunnen om dit te ontsleutelen. En zelfs als ze dat wel zouden doen — drand werkt onafhankelijk van Anthropic. De wiskunde van time-lock encryption staat hen niet toe sneller bij de sleutel te komen dan iedereen anders."
+    a: "Nee. De plaintext bestond enkel tijdelijk in de chatsessie en is direct na versleuteling vernietigd. Anthropic bewaart geen chatgeschiedenis op een manier waar wij of zij later bij kunnen om dit te ontsleutelen. En zelfs als ze dat wel zouden doen, drand werkt onafhankelijk van Anthropic. De wiskunde van time-lock encryption staat hen niet toe sneller bij de sleutel te komen dan iedereen anders."
   },
   {
     q: "Welke Bijbelvertaling wordt gebruikt?",
@@ -67,7 +67,7 @@ const faqs = [
   },
   {
     q: "Mag ik een blog delen of citeren?",
-    a: "Graag — met bronvermelding (clauzibol.nl) en de duidelijke vermelding dat het AI-tekst is, geschreven door Claude op 20 april 2026."
+    a: "Graag, met bronvermelding (clauzibol.nl) en de duidelijke vermelding dat het AI-tekst is, geschreven door Claude op 20 april 2026."
   },
   {
     q: "Wat als een blog er compleet naast zit?",
@@ -79,15 +79,15 @@ const faqs = [
   },
 ];
 ---
-<Layout title="Hoe het werkt & FAQ — Clauzibol">
+<Layout title="Hoe het werkt & FAQ, Clauzibol">
   <article class="max-w-3xl mx-auto px-6 py-16">
     <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">Transparantie</p>
     <h1 class="serif text-4xl md:text-5xl mt-3 mb-4" style="color:var(--color-cream)">
-      Hoe we dit hebben gedaan — stap voor stap
+      Hoe we dit hebben gedaan, stap voor stap
     </h1>
     <p class="text-lg leading-relaxed opacity-90 mb-12">
       Geen sensatie, geen achteraf-truc. Hieronder leggen we letterlijk uit hoe deze site is opgezet,
-      hoe de 52 blogs zijn geschreven, versleuteld en vernietigd, en waarom — wiskundig onderbouwd —
+      hoe de 52 blogs zijn geschreven, versleuteld en vernietigd, en waarom, wiskundig onderbouwd,
       ook wij er niet meer bij kunnen.
     </p>
 
@@ -108,7 +108,7 @@ const faqs = [
     <div class="rounded-xl border p-6 mb-16" style="border-color:var(--color-gold);background:rgba(184,134,11,0.06)">
       <div class="text-xs uppercase tracking-widest mb-3" style="color:var(--color-gold)">Belangrijkste claim, in één zin</div>
       <p class="serif text-xl leading-snug" style="color:var(--color-cream)">
-        De tekst die je over X weken leest, is — wiskundig bewijsbaar — exact de tekst die op
+        De tekst die je over X weken leest, is, wiskundig bewijsbaar, exact de tekst die op
         20 april 2026 is geschreven. Niemand kon eerder lezen, niemand kon achteraf wijzigen.
       </p>
     </div>

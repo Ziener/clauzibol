@@ -14,7 +14,7 @@ const manifest = manifestJson as {
   <h2 class="serif text-3xl md:text-4xl mt-3 mb-4" style="color:var(--color-cream)">52 vingerafdrukken, vastgelegd op 20 april 2026</h2>
 
   <p class="leading-relaxed opacity-90 mb-3">
-    Elk van de 52 brieven heeft een unieke <strong>SHA-256 hash</strong> — een getal van 64 tekens
+    Elk van de 52 brieven heeft een unieke <strong>SHA-256 hash</strong>, een getal van 64 tekens
     dat verandert als één komma in de brief wijzigt. Wie deze week een slot open ziet gaan, kan
     zelf de hash berekenen van de vrijgegeven tekst en vergelijken met de hash hieronder. Komen ze
     overeen? Dan is de tekst <strong>ongewijzigd sinds 20 april 2026</strong>.
@@ -49,7 +49,7 @@ const manifest = manifestJson as {
               <tr class="border-t" style="border-color:rgba(255,255,255,0.05)">
                 <td class="px-4 py-2 opacity-80">{String(w.number).padStart(2, "0")}</td>
                 <td class="px-4 py-2 opacity-80">{datum}</td>
-                <td class="px-4 py-2 font-mono text-xs" style="color:var(--color-gold-soft)">{entry?.sha256.slice(0, 16) ?? "—"}</td>
+                <td class="px-4 py-2 font-mono text-xs" style="color:var(--color-gold-soft)">{entry?.sha256.slice(0, 16) ?? "-"}</td>
                 <td class="px-4 py-2">{open ? "🔓" : "🔒"}</td>
               </tr>
             );
@@ -59,3 +59,5 @@ const manifest = manifestJson as {
     </div>
   </details>
 </section>
+n>
+>

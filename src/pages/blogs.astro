@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import { weeks, isUnlocked, formatNL } from "../data/weeks";
 ---
-<Layout title="Blogs — Clauzibol">
+<Layout title="Blogs, Clauzibol">
   <section class="max-w-4xl mx-auto px-6 py-16">
     <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">52 weken, 52 zegels</p>
     <h1 class="serif text-4xl md:text-5xl mt-3 mb-4" style="color:var(--color-cream)">Blogs</h1>
@@ -17,7 +17,7 @@ import { weeks, isUnlocked, formatNL } from "../data/weeks";
               <span class="text-lg shrink-0">{open ? "🔓" : "🔒"}</span>
               <div class="min-w-0">
                 <a href={`/blog/${w.slug}`} class="serif text-lg block truncate" style="color:var(--color-cream)">
-                  Week {String(w.number).padStart(2, "0")} {open ? `— ${w.title}` : <span class="italic opacity-60">— Verzegeld</span>}
+                  Week {String(w.number).padStart(2, "0")}{open ? `, ${w.title}` : <span class="italic opacity-60">, Verzegeld</span>}
                 </a>
                 <div class="text-xs opacity-60">{formatNL(w.unlockISO)}</div>
               </div>
@@ -31,3 +31,6 @@ import { weeks, isUnlocked, formatNL } from "../data/weeks";
     </ul>
   </section>
 </Layout>
+t>
+>
+t>
