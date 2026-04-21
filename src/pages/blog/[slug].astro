@@ -13,18 +13,16 @@ const prev = weeks[week.number - 2];
 const next = weeks[week.number];
 const tlockUrl = `/sealed/${week.slug}.tlock`;
 ---
-<Layout title={open ? `Week ${week.number} · Clauzibol` : `Week ${week.number}, Verzegeld · Clauzibol`}>
+<Layout title={`Week ${week.number} · Clauzibol`}>
   <article class="max-w-3xl mx-auto px-6 py-16">
     <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">
       Week {String(week.number).padStart(2, "0")} · {formatNL(week.unlockISO)}
     </p>
-    <h1
-      id="blog-title"
-      class={`serif text-4xl md:text-5xl mt-3 mb-8 ${open ? "" : "italic opacity-70"}`}
-      style="color:var(--color-cream)"
-    >{open ? "Bezig met ontsleutelen…" : "Verzegeld"}</h1>
 
-    {!open && (
+    <!-- Verzegeld-sectie: getoond zolang unlock-tijd nog niet bereikt is.
+         Server-side initieel verborgen als build "open" was; client-side bepaalt definitief. -->
+    <section id="locked-section" style={open ? "display:none" : ""}>
+      <h1 class="serif text-4xl md:text-5xl mt-3 mb-8 italic opacity-70" style="color:var(--color-cream)">Verzegeld</h1>
       <div class="rounded-xl border p-8 mb-10 text-center" style="border-color:var(--color-gold);background:rgba(184,134,11,0.05)">
         <div class="text-6xl mb-4">🔒</div>
         <h2 class="serif text-2xl mb-2" style="color:var(--color-cream)">Verzegeld</h2>
@@ -45,30 +43,32 @@ const tlockUrl = `/sealed/${week.slug}.tlock`;
           De tekst die straks verschijnt produceert exact deze vingerafdruk, anders is er gerommeld.
         </p>
       </div>
-    )}
+    </section>
 
-    {open && (
-      <>
-        <article id="blog-body" class="prose-clauzibol leading-relaxed opacity-95 space-y-5">
-          <p class="opacity-70 italic">Inhoud wordt geladen en ontsleuteld in je browser…</p>
-        </article>
+    <!-- Open-sectie: skeleton wordt ALTIJD gerendeerd (initieel verborgen indien verzegeld bij build),
+         zodat client-side scripts hem kunnen tonen op het moment van unlock zonder dat er een nieuwe
+         deploy nodig is. -->
+    <section id="open-section" style={open ? "" : "display:none"}>
+      <h1 id="blog-title" class="serif text-4xl md:text-5xl mt-3 mb-8" style="color:var(--color-cream)">Bezig met ontsleutelen…</h1>
+      <article id="blog-body" class="prose-clauzibol leading-relaxed opacity-95 space-y-5">
+        <p class="opacity-70 italic">Inhoud wordt geladen en ontsleuteld in je browser…</p>
+      </article>
 
-        <div id="verify-box" class="mt-12 rounded-lg border p-6 hidden" style="border-color:rgba(184,134,11,0.3);background:rgba(184,134,11,0.04)">
-          <div class="text-xs uppercase tracking-widest mb-2" style="color:var(--color-gold)">Verifieer deze tekst</div>
-          <p class="text-sm opacity-80 mb-2">Originele hash (vastgelegd 20 april 2026):</p>
-          <code class="block break-all text-xs px-3 py-2 rounded font-mono mb-3" style="background:rgba(0,0,0,0.3);color:var(--color-gold-soft)">{week.hash}</code>
-          <p class="text-sm opacity-80 mb-2">Berekend in je browser uit de hierboven getoonde tekst:</p>
-          <code id="computed-hash" class="block break-all text-xs px-3 py-2 rounded font-mono mb-3" style="background:rgba(0,0,0,0.3);color:var(--color-gold-soft)">…</code>
-          <p id="verify-status" class="text-sm font-semibold"></p>
-        </div>
+      <div id="verify-box" class="mt-12 rounded-lg border p-6 hidden" style="border-color:rgba(184,134,11,0.3);background:rgba(184,134,11,0.04)">
+        <div class="text-xs uppercase tracking-widest mb-2" style="color:var(--color-gold)">Verifieer deze tekst</div>
+        <p class="text-sm opacity-80 mb-2">Originele hash (vastgelegd 20 april 2026):</p>
+        <code class="block break-all text-xs px-3 py-2 rounded font-mono mb-3" style="background:rgba(0,0,0,0.3);color:var(--color-gold-soft)">{week.hash}</code>
+        <p class="text-sm opacity-80 mb-2">Berekend in je browser uit de hierboven getoonde tekst:</p>
+        <code id="computed-hash" class="block break-all text-xs px-3 py-2 rounded font-mono mb-3" style="background:rgba(0,0,0,0.3);color:var(--color-gold-soft)">…</code>
+        <p id="verify-status" class="text-sm font-semibold"></p>
+      </div>
 
-        <p class="mt-10 text-xs italic opacity-70">
-          Deze blog is geschreven door Claude, een AI, op 20 april 2026 en cryptografisch verzegeld tot het moment
-          van publicatie. Het is een verbeelding van wat zou kunnen gebeuren, geen zekere voorspelling. Aan deze
-          tekst kunnen geen rechten worden ontleend. De Bijbel (HSV) is leidend, niet deze woorden.
-        </p>
-      </>
-    )}
+      <p class="mt-10 text-xs italic opacity-70">
+        Deze blog is geschreven door Claude, een AI, op 20 april 2026 en cryptografisch verzegeld tot het moment
+        van publicatie. Het is een verbeelding van wat zou kunnen gebeuren, geen zekere voorspelling. Aan deze
+        tekst kunnen geen rechten worden ontleend. De Bijbel (HSV) is leidend, niet deze woorden.
+      </p>
+    </section>
 
     <nav class="mt-16 flex items-center justify-between text-sm">
       {prev ? <a href={`/blog/${prev.slug}`}>← Week {prev.number}</a> : <span></span>}
@@ -77,10 +77,30 @@ const tlockUrl = `/sealed/${week.slug}.tlock`;
     </nav>
   </article>
 
-  <script type="module" define:vars={{ tlockUrl, expectedHash: week.hash, weekNumber: week.number, isOpenAtBuild: open }}>
-    if (!isOpenAtBuild) {
-      // verzegeld bij build → niets te doen client-side
+  <script type="module" define:vars={{ tlockUrl, expectedHash: week.hash, weekNumber: week.number, unlockISO: week.unlockISO }}>
+    const unlockTime = new Date(unlockISO).getTime();
+    const lockedSection = document.getElementById("locked-section");
+    const openSection = document.getElementById("open-section");
+
+    function revealOpen() {
+      if (lockedSection) lockedSection.style.display = "none";
+      if (openSection) openSection.style.display = "";
+      runDecryption();
+    }
+
+    // Bepaal runtime of de pagina al ontgrendeld zou moeten zijn.
+    const now = Date.now();
+    if (now >= unlockTime) {
+      revealOpen();
     } else {
+      // Schedule een automatische ontgrendeling op het exacte unlock-moment,
+      // zodat een bezoeker die om 06:55 op de pagina staat om 07:00 zonder refresh ziet ontgrendelen.
+      // setTimeout met grote delay (>24 dagen) is in moderne browsers OK; voor de zekerheid begrenzen.
+      const delay = Math.min(unlockTime - now, 2147483647);
+      setTimeout(revealOpen, delay + 500); // +0.5s buffer voor drand-beschikbaarheid
+    }
+
+    async function runDecryption() {
       const titleEl = document.getElementById("blog-title");
       const bodyEl = document.getElementById("blog-body");
       const verifyBox = document.getElementById("verify-box");
