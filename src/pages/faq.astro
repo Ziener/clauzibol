@@ -78,8 +78,35 @@ const faqs = [
     a: "Elke maandag om 07:00 uur Nederlandse tijd (Europe/Amsterdam, automatisch zomer/wintertijd correct). 52 weken lang, vanaf 4 mei 2026 t/m 26 april 2027."
   },
 ];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a },
+  })),
+};
+
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Hoe Clauzibol 52 blogs cryptografisch verzegelt",
+  "description": "Stap-voor-stap uitleg hoe de 52 AI-geschreven Clauzibol-blogs vooraf worden geschreven, versleuteld via drand/tlock en verankerd op de Bitcoin-blockchain via OpenTimestamps.",
+  "step": steps.map((s, i) => ({
+    "@type": "HowToStep",
+    "position": i + 1,
+    "name": s.title,
+    "text": s.body,
+  })),
+};
 ---
-<Layout title="Hoe het werkt & FAQ, Clauzibol">
+<Layout
+  title="Hoe werkt de verzegeling? FAQ over Claude AI & Bijbel-profetie · Clauzibol"
+  description="Stap voor stap: hoe 52 door Claude AI geschreven Bijbel-blogs cryptografisch zijn verzegeld met time-lock encryption (drand/tlock) en verankerd op de Bitcoin-blockchain. Veelgestelde vragen & technische uitleg."
+  jsonLd={[faqSchema, howToSchema]}
+>
   <article class="max-w-3xl mx-auto px-6 py-16">
     <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">Transparantie</p>
     <h1 class="serif text-4xl md:text-5xl mt-3 mb-4" style="color:var(--color-cream)">

@@ -3,35 +3,113 @@ import "../styles/global.css";
 export interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
+  ogType?: "website" | "article";
+  jsonLd?: Record<string, any> | Array<Record<string, any>>;
+  noIndex?: boolean;
 }
 const {
-  title = "Clauzibol, Plauzibele profetie van een AI met de Bijbel in de hand",
-  description = "52 blogs, vooraf geschreven door Claude (AI) op 20 april 2026, cryptografisch verzegeld. Elke week gaat er één slot open."
+  title = "Clauzibol · 52 verzegelde profetie-blogs van AI Claude met de Bijbel",
+  description = "Experiment in eerlijke profetie: Claude (AI) schreef op 20 april 2026 voor 52 weken een Bijbel-gestuurde blog. Cryptografisch verzegeld, elke maandag 07:00 opent er één.",
+  ogImage = "/og-image.png",
+  ogType = "website",
+  jsonLd,
+  noIndex = false,
 } = Astro.props;
+
+const siteUrl = "https://www.clauzibol.nl";
+const canonical = new URL(Astro.url.pathname, siteUrl).toString();
+const ogImageUrl = new URL(ogImage, siteUrl).toString();
+
+// Default site-wide JSON-LD: WebSite + Organization. Per-pagina schemas
+// (Article, FAQPage, BreadcrumbList) worden via de `jsonLd` prop bijgevoegd.
+const defaultJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Clauzibol",
+    "alternateName": "Clauzibol · verzegelde profetie",
+    "url": siteUrl,
+    "inLanguage": "nl-NL",
+    "description": "52 door AI Claude geschreven, cryptografisch verzegelde Bijbel-profetie-blogs — wekelijks ontgrendeld.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${siteUrl}/blogs?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Clauzibol",
+    "url": siteUrl,
+    "logo": `${siteUrl}/logo.svg`,
+    "description": "Nederlands publiek experiment in plauzibele profetie: AI + Bijbel + cryptografische verzegeling.",
+    "sameAs": [
+      "https://instagram.com/clauzibol",
+      "https://facebook.com/clauzibol",
+    ],
+    "founder": { "@type": "Person", "name": "Rob Giesbers" },
+    "foundingDate": "2026-04-20",
+  },
+];
+
+const allJsonLd = jsonLd
+  ? [...defaultJsonLd, ...(Array.isArray(jsonLd) ? jsonLd : [jsonLd])]
+  : defaultJsonLd;
 ---
 <!doctype html>
 <html lang="nl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
     <meta name="description" content={description} />
+    {noIndex && <meta name="robots" content="noindex,nofollow" />}
+    <link rel="canonical" href={canonical} />
+
+    {/* Open Graph */}
+    <meta property="og:site_name" content="Clauzibol" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="nl_NL" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Clauzibol · 52 verzegelde profetie-blogs" />
+
+    {/* Twitter Card */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content="Clauzibol · 52 verzegelde profetie-blogs" />
+
+    {/* Favicons */}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    {/* Fonts */}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://esm.sh" />
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <title>{title}</title>
+
+    {/* JSON-LD structured data */}
+    {allJsonLd.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
   </head>
   <body class="min-h-screen flex flex-col">
     <header class="border-b border-white/5">
       <div class="max-w-6xl mx-auto px-6 py-5 flex flex-wrap items-center gap-4">
         <a href="/" class="flex items-center gap-3 group mr-auto">
-          <img src="/logo.svg" alt="" width="40" height="40" class="shrink-0" />
+          <img src="/logo.svg" alt="Clauzibol logo" width="40" height="40" class="shrink-0" />
           <div class="leading-tight">
             <div class="serif text-xl text-cream group-hover:text-gold transition" style="color:var(--color-cream)">Clauzibol</div>
             <div class="text-[11px] uppercase tracking-[0.2em]" style="color:var(--color-gold-soft)">Verzegelde profetie</div>

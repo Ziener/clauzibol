@@ -12,8 +12,46 @@ const open = isUnlocked(week);
 const prev = weeks[week.number - 2];
 const next = weeks[week.number];
 const tlockUrl = `/sealed/${week.slug}.tlock`;
+
+const unlockDate = new Date(week.unlockISO);
+const unlockDateNL = unlockDate.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+
+const pageTitle = `Week ${String(week.number).padStart(2, "0")} · Clauzibol, verzegelde profetie-blog`;
+const pageDescription = open
+  ? `Week ${week.number} van Clauzibol is vrijgegeven. Lees de door Claude (AI) geschreven en cryptografisch verzegelde Bijbel-blog, met verifieerbare SHA-256 hash.`
+  : `Week ${week.number} van Clauzibol opent op ${unlockDateNL} om 07:00. Vooraf verzegeld door Claude (AI) op 20 april 2026, vingerafdruk verankerd op de Bitcoin-blockchain.`;
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": `Clauzibol week ${week.number}`,
+  "description": pageDescription,
+  "datePublished": week.unlockISO,
+  "dateCreated": "2026-04-20T23:00:00+02:00",
+  "inLanguage": "nl-NL",
+  "author": { "@type": "Person", "name": "Claude", "description": "AI-model van Anthropic, auteur van de 52 Clauzibol-blogs" },
+  "publisher": { "@type": "Organization", "name": "Clauzibol", "logo": { "@type": "ImageObject", "url": "https://www.clauzibol.nl/logo.svg" } },
+  "mainEntityOfPage": `https://www.clauzibol.nl/blog/${week.slug}`,
+  "isAccessibleForFree": true,
+  "keywords": ["profetie", "AI", "Bijbel", "Claude", "time-lock", "cryptografie", "HSV", `week ${week.number}`],
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.clauzibol.nl/" },
+    { "@type": "ListItem", "position": 2, "name": "Blogs", "item": "https://www.clauzibol.nl/blogs" },
+    { "@type": "ListItem", "position": 3, "name": `Week ${week.number}` },
+  ],
+};
 ---
-<Layout title={`Week ${week.number} · Clauzibol`}>
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  ogType="article"
+  jsonLd={[articleSchema, breadcrumbSchema]}
+>
   <article class="max-w-3xl mx-auto px-6 py-16">
     <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">
       Week {String(week.number).padStart(2, "0")} · {formatNL(week.unlockISO)}

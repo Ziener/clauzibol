@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /uitschrijven
+Disallow: /sealed/
+
+Sitemap: https://www.clauzibol.nl/sitemap-index.xml
