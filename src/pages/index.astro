@@ -60,7 +60,104 @@ const openCount = weeks.filter((w) => isUnlocked(w)).length;
     <p class="serif text-2xl md:text-3xl leading-snug opacity-90 mb-6" style="color:var(--color-cream)">
       "Wat verborgen was, zal worden geopenbaard."
     </p>
-    <p class="text-sm opacity-70 mb-10">Geen sensatie. Wel bezinning. Plauzibele profetie, waterdicht bewijsbaar.</p>
-    <a href="/contact" class="inline-block px-6 py-3 rounded text-sm" style="background:var(--color-gold);color:var(--color-night)">Schrijf je in voor de wekelijkse release</a>
+    <p class="text-sm opacity-70 mb-8">Geen sensatie. Wel bezinning. Plauzibele profetie, waterdicht bewijsbaar.</p>
+
+    <form
+      id="nieuwsbriefForm"
+      class="max-w-md mx-auto rounded-lg border p-6 space-y-3 text-left"
+      style="border-color:rgba(184,134,11,0.3);background:rgba(184,134,11,0.04)"
+    >
+      <label for="nb-email" class="block text-sm font-semibold" style="color:var(--color-gold-soft)">
+        Schrijf je in voor de wekelijkse release
+      </label>
+      <p class="text-xs opacity-70">Elke maandagochtend een mailtje zodra het nieuwe slot opent. Eén klik uitschrijven, geen spam.</p>
+
+      <input type="hidden" name="_subject" value="Nieuwsbrief-inschrijving clauzibol.nl" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="Bron" value="homepage" />
+
+      <!-- Honeypot: leeg veld dat alleen bots invullen -->
+      <div style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden" aria-hidden="true">
+        <label>Vul dit veld niet in <input type="text" name="_honey" tabindex="-1" autocomplete="off" /></label>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-2">
+        <input id="nb-email" type="email" name="E-mail" required autocomplete="email"
+          placeholder="jij@voorbeeld.nl"
+          class="flex-1 rounded px-3 py-2 bg-transparent border focus:outline-none focus:ring-1 text-sm"
+          style="border-color:rgba(184,134,11,0.4);color:var(--color-cream)" />
+        <button id="nb-submit" type="submit"
+          class="px-5 py-2 rounded text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          style="background:var(--color-gold);color:var(--color-night)">
+          Inschrijven
+        </button>
+      </div>
+      <p class="text-[11px] opacity-60">
+        Door in te schrijven ga je akkoord met onze <a href="/colofon" class="underline">privacyverklaring</a>.
+      </p>
+    </form>
+    <div id="nb-status" class="max-w-md mx-auto mt-4 hidden rounded-lg border p-3 text-sm text-left"></div>
   </section>
+
+  <script is:inline>
+    (function () {
+      const form = document.getElementById("nieuwsbriefForm");
+      if (!form) return;
+      const btn = document.getElementById("nb-submit");
+      const status = document.getElementById("nb-status");
+      // Eigen Vercel API route → voegt toe aan Brevo-lijst
+      const endpoint = "/api/subscribe";
+      const loadedAt = Date.now();
+
+      function show(msg, ok) {
+        status.className = "max-w-md mx-auto mt-4 rounded-lg border p-3 text-sm text-left " +
+          (ok ? "border-[color:var(--color-gold)]" : "border-red-500/40");
+        status.style.background = ok ? "rgba(184,134,11,0.1)" : "rgba(239,68,68,0.08)";
+        status.style.color = "var(--color-cream)";
+        status.textContent = msg;
+        status.classList.remove("hidden");
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (form._honey && form._honey.value) return;
+        if (Date.now() - loadedAt < 2000) {
+          show("Even rustig aan, vul je e-mail zorgvuldig in.", false);
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Bezig...";
+
+        try {
+          const data = new FormData(form);
+          const obj = {};
+          data.forEach((v, k) => { obj[k] = v; });
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify({ email: obj["E-mail"], _honey: obj._honey, Bron: obj.Bron }),
+          });
+          const json = await res.json().catch(() => ({}));
+          if (res.ok && json.ok) {
+            form.reset();
+            const msg = json.already
+              ? "✓ Je stond al op de lijst. Elke maandagochtend hoor je van ons."
+              : "✓ Bedankt, je staat op de lijst. Elke maandagochtend hoor je van ons.";
+            show(msg, true);
+            btn.textContent = "Ingeschreven";
+          } else {
+            show("Er ging iets mis: " + (json.error || res.status) + ". Probeer het zo opnieuw.", false);
+            btn.disabled = false;
+            btn.textContent = "Inschrijven";
+          }
+        } catch (err) {
+          console.error("[nieuwsbrief] fetch error:", err);
+          show("Geen verbinding: " + (err && err.message ? err.message : String(err)) + ".", false);
+          btn.disabled = false;
+          btn.textContent = "Inschrijven";
+        }
+      });
+    })();
+  </script>
 </Layout>

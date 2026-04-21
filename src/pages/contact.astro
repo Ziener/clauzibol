@@ -116,7 +116,7 @@ import Layout from "../layouts/Layout.astro";
 
         try {
           const data = new FormData(form);
-          // FormSubmit AJAX wil JSON, geen multipart
+          // FormSubmit AJAX wil JSON body
           const obj = {};
           data.forEach((v, k) => { obj[k] = v; });
           const res = await fetch(endpoint, {
@@ -130,12 +130,13 @@ import Layout from "../layouts/Layout.astro";
             show("✓ Bedankt, uw bericht is verzonden. We lezen het en antwoorden waar mogelijk.", true);
             btn.textContent = "Verzonden";
           } else {
-            show("Er ging iets mis bij het verzenden. Probeer het over een paar minuten opnieuw.", false);
+            show("Er ging iets mis bij het verzenden (" + (json.message || res.status) + "). Probeer het over een paar minuten opnieuw.", false);
             btn.disabled = false;
             btn.textContent = "Verstuur bericht";
           }
         } catch (err) {
-          show("Geen verbinding. Probeer het over een paar minuten opnieuw.", false);
+          console.error("[contact] fetch error:", err);
+          show("Geen verbinding: " + (err && err.message ? err.message : String(err)) + ". Probeer het later opnieuw of mail rechtstreeks naar ziener@clauzibol.nl.", false);
           btn.disabled = false;
           btn.textContent = "Verstuur bericht";
         }
