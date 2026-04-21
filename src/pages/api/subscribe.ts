@@ -5,6 +5,14 @@
 export const prerender = false;
 
 import type { APIRoute } from "astro";
+import crypto from "node:crypto";
+
+// HMAC-token voor one-click uitschrijflink. We signen met CRON_SECRET als
+// die gezet is, anders vallen we terug op BREVO_API_KEY (altijd aanwezig).
+export function unsubscribeToken(email: string): string {
+  const secret = import.meta.env.CRON_SECRET || import.meta.env.BREVO_API_KEY || "";
+  return crypto.createHmac("sha256", secret).update(email.toLowerCase().trim()).digest("hex").slice(0, 32);
+}
 
 export const POST: APIRoute = async ({ request }) => {
   const apiKey = import.meta.env.BREVO_API_KEY;
@@ -84,7 +92,8 @@ async function sendWelcomeEmail(opts: {
   siteUrl: string;
 }): Promise<void> {
   const { apiKey, email, senderEmail, senderName, siteUrl } = opts;
-  const htmlContent = renderWelcomeHtml(siteUrl);
+  const unsubUrl = `${siteUrl}/uitschrijven?e=${encodeURIComponent(email)}&t=${unsubscribeToken(email)}`;
+  const htmlContent = renderWelcomeHtml(siteUrl, unsubUrl);
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
@@ -98,6 +107,10 @@ async function sendWelcomeEmail(opts: {
       subject: "Welkom bij Clauzibol",
       htmlContent,
       tags: ["welcome"],
+      headers: {
+        "List-Unsubscribe": `<${unsubUrl}>`,
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+      },
     }),
   });
   if (!res.ok) {
@@ -106,7 +119,7 @@ async function sendWelcomeEmail(opts: {
   }
 }
 
-function renderWelcomeHtml(siteUrl: string): string {
+function renderWelcomeHtml(siteUrl: string, unsubUrl: string): string {
   return `<!doctype html>
 <html lang="nl">
 <head>
@@ -185,7 +198,7 @@ function renderWelcomeHtml(siteUrl: string): string {
           <p style="font-size:14px;line-height:1.65;margin:0;color:#f5f1e8;opacity:0.9;">
             <strong>Clau</strong> van Claude (de auteur). <strong>Zi</strong> van ziener
             ("wie nu profeet genoemd wordt, noemde men vroeger een ziener", 1 Samuël 9:9 HSV).
-            <strong>Bol</strong> klinkt naar plauzibel &mdash; plausibele profetie, doordacht,
+            <strong>Bol</strong> klinkt naar plauzibel: plausibele profetie, doordacht,
             geen wilde gok.
           </p>
         </td></tr>
@@ -226,9 +239,9 @@ function renderWelcomeHtml(siteUrl: string): string {
         </td></tr>
 
         <tr><td style="padding:10px 0 0 0;text-align:center;">
-          <div style="font-size:11px;color:#f5f1e8;opacity:0.4;">
-            Je ontvangt deze mail omdat je je hebt ingeschreven op <a href="${siteUrl}" style="color:#d4a849;">clauzibol.nl</a>.
-            Uitschrijven kan via de link onderaan elke volgende mail.
+          <div style="font-size:11px;color:#f5f1e8;opacity:0.4;line-height:1.6;">
+            Je ontvangt deze mail omdat je je hebt ingeschreven op <a href="${siteUrl}" style="color:#d4a849;">clauzibol.nl</a>.<br/>
+            <a href="${unsubUrl}" style="color:#d4a849;">Uitschrijven</a>
           </div>
         </td></tr>
 

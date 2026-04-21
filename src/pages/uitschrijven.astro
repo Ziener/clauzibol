@@ -1,0 +1,65 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const status = Astro.url.searchParams.get("status") || "";
+const email = Astro.url.searchParams.get("e") || "";
+
+let title = "Uitschrijven";
+let heading = "Uitschrijven";
+let message = "";
+let tone: "ok" | "error" | "info" = "info";
+
+if (status === "ok") {
+  title = "Uitgeschreven, Clauzibol";
+  heading = "Je bent uitgeschreven";
+  message = email
+    ? `Het adres ${email} is verwijderd uit de nieuwsbrieflijst. Je ontvangt geen mails meer van Clauzibol.`
+    : "Het adres is verwijderd uit de nieuwsbrieflijst. Je ontvangt geen mails meer van Clauzibol.";
+  tone = "ok";
+} else if (status === "invalid" || status === "invalid_token") {
+  title = "Uitschrijven, Clauzibol";
+  heading = "Link niet (meer) geldig";
+  message = "De uitschrijflink is onvolledig of verlopen. Stuur een bericht via het contactformulier, dan halen we je handmatig van de lijst.";
+  tone = "error";
+} else if (status === "server_error") {
+  title = "Uitschrijven, Clauzibol";
+  heading = "Er ging iets mis";
+  message = "We konden je op dit moment niet uitschrijven. Probeer het later nog eens of stuur een bericht via het contactformulier.";
+  tone = "error";
+} else {
+  message = "Je bent op het punt je uit te schrijven van de Clauzibol-nieuwsbrief. Gebruik de link in de mail die je van ons hebt gekregen.";
+}
+---
+<Layout title={title}>
+  <article class="max-w-3xl mx-auto px-6 py-16">
+    <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">Nieuwsbrief</p>
+    <h1 class="serif text-4xl md:text-5xl mt-3 mb-8" style="color:var(--color-cream)">{heading}</h1>
+
+    <p class="leading-relaxed opacity-90 mb-6">
+      {message}
+    </p>
+
+    {tone === "ok" && (
+      <p class="leading-relaxed opacity-80 mb-6">
+        Mocht je je bedenken: via de homepage kun je je altijd opnieuw aanmelden.
+      </p>
+    )}
+
+    <div class="mt-10 flex flex-col sm:flex-row gap-3">
+      <a
+        href="/"
+        class="inline-block px-6 py-3 rounded-md text-sm font-semibold"
+        style="background:var(--color-gold);color:var(--color-ink)"
+      >
+        Naar de homepage
+      </a>
+      <a
+        href="/contact"
+        class="inline-block px-6 py-3 rounded-md text-sm font-semibold border"
+        style="border-color:var(--color-gold);color:var(--color-gold)"
+      >
+        Contactformulier
+      </a>
+    </div>
+  </article>
+</Layout>
