@@ -74,6 +74,14 @@ export const POST: APIRoute = async ({ request }) => {
         // Welkomstmail mag niet de hele inschrijving blokkeren
         console.error("[brevo] welkomstmail faalde", e);
       });
+
+      // Admin-notificatie: alleen als NOTIFY_EMAIL is geconfigureerd
+      const notifyEmail = import.meta.env.NOTIFY_EMAIL;
+      if (notifyEmail) {
+        await sendAdminNotification({ apiKey, subscriberEmail: email, bron, notifyEmail, senderEmail, senderName }).catch((e) => {
+          console.error("[brevo] admin-notificatie faalde", e);
+        });
+      }
     }
 
     return json({ ok: true, already: alreadyOnList }, 200);
@@ -82,6 +90,55 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ ok: false, error: "Kon Brevo niet bereiken." }, 502);
   }
 };
+
+// ── Admin-notificatie bij nieuwe inschrijving ───────────────────────────
+async function sendAdminNotification(opts: {
+  apiKey: string;
+  subscriberEmail: string;
+  bron: string;
+  notifyEmail: string;
+  senderEmail: string;
+  senderName: string;
+}): Promise<void> {
+  const { apiKey, subscriberEmail, bron, notifyEmail, senderEmail, senderName } = opts;
+  const now = new Date().toLocaleString("nl-NL", { timeZone: "Europe/Amsterdam", dateStyle: "full", timeStyle: "short" });
+  const html = `<!doctype html>
+<html lang="nl"><body style="font-family:Inter,Arial,sans-serif;background:#f5f1e8;padding:24px;color:#0a0e27;">
+  <div style="max-width:500px;margin:0 auto;background:#fff;border:1px solid #d4a849;border-radius:8px;padding:24px;">
+    <h2 style="margin:0 0 16px 0;color:#0a0e27;font-family:Georgia,serif;">Nieuwe inschrijving</h2>
+    <p style="margin:0 0 8px 0;"><strong>E-mail:</strong> ${escapeHtml(subscriberEmail)}</p>
+    <p style="margin:0 0 8px 0;"><strong>Bron:</strong> ${escapeHtml(bron)}</p>
+    <p style="margin:0 0 16px 0;"><strong>Tijd:</strong> ${escapeHtml(now)}</p>
+    <p style="font-size:12px;color:#666;margin:0;">Automatische melding van clauzibol.nl/api/subscribe</p>
+  </div>
+</body></html>`;
+
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": apiKey,
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    },
+    body: JSON.stringify({
+      sender: { name: senderName, email: senderEmail },
+      to: [{ email: notifyEmail }],
+      subject: `Nieuwe Clauzibol-inschrijving: ${subscriberEmail}`,
+      htmlContent: html,
+      tags: ["admin-notify"],
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(`smtp/email ${res.status}: ${JSON.stringify(err)}`);
+  }
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  }[c] as string));
+}
 
 // ── Welkomstmail (transactional via Brevo /v3/smtp/email) ───────────────
 async function sendWelcomeEmail(opts: {
