@@ -1,30 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
-  <!-- Glazen bol — circle met subtiele highlight -->
   <defs>
-    <radialGradient id="orb" cx="40%" cy="35%" r="65%">
-      <stop offset="0%" stop-color="#FFFAF3" stop-opacity="0.18"/>
-      <stop offset="40%" stop-color="#E8D5B7" stop-opacity="0.05"/>
-      <stop offset="100%" stop-color="#1a1a2e" stop-opacity="0.0"/>
-    </radialGradient>
-    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="lockGold" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#E8D5B7"/>
       <stop offset="100%" stop-color="#B8860B"/>
     </linearGradient>
+    <linearGradient id="lockBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4A849"/>
+      <stop offset="100%" stop-color="#8B6508"/>
+    </linearGradient>
   </defs>
 
-  <!-- Slotbeugel boven de bol — verzegeld -->
-  <path d="M44 38 V30 a16 16 0 0 1 32 0 V38" stroke="url(#rim)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+  <!-- Slotbeugel -->
+  <path d="M34 56 V42 a26 26 0 0 1 52 0 V56"
+        stroke="url(#lockGold)" stroke-width="6" stroke-linecap="round" fill="none"/>
 
-  <!-- De bol -->
-  <circle cx="60" cy="68" r="36" stroke="url(#rim)" stroke-width="3" fill="url(#orb)"/>
+  <!-- Body -->
+  <rect x="24" y="56" width="72" height="64" rx="6" fill="url(#lockBody)"/>
 
-  <!-- Het oog van de ziener, midden in de bol -->
-  <!-- Almond eye outline -->
-  <path d="M40 68 Q60 52 80 68 Q60 84 40 68 Z" stroke="#B8860B" stroke-width="2.2" fill="none" stroke-linejoin="round"/>
-  <!-- Iris -->
-  <circle cx="60" cy="68" r="7" fill="#B8860B"/>
-  <!-- Pupil -->
-  <circle cx="60" cy="68" r="3" fill="#1a1a2e"/>
-  <!-- Klein hoogtepuntje -->
-  <circle cx="62" cy="66" r="1" fill="#FFFAF3"/>
+  <!-- Latijns kruis in het midden van de body -->
+  <rect x="56" y="70" width="8" height="40" fill="#0a0e27"/>
+  <rect x="46" y="82" width="28" height="8" fill="#0a0e27"/>
 </svg>

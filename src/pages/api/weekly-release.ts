@@ -194,6 +194,7 @@ function renderEmailHtml(opts: {
 
         <!-- Header / logo -->
         <tr><td style="padding:0 0 28px 0;text-align:center;">
+          <img src="${siteUrl}/logo.png" alt="Clauzibol" width="56" height="56" style="display:inline-block;margin-bottom:12px;" />
           <div style="font-family:'Playfair Display',Georgia,serif;font-size:22px;color:#f5f1e8;letter-spacing:0.02em;">Clauzibol</div>
           <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.2em;color:#d4a849;margin-top:4px;">Verzegelde profetie</div>
         </td></tr>
