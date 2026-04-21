@@ -1,55 +1,90 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+// FormSubmit.co — gratis, geen account nodig.
+// Bij eerste verzending stuurt FormSubmit een verificatiemail naar dit adres;
+// klik daarin op "Confirm" om het formulier te activeren. Daarna komen alle
+// inzendingen binnen op info@clauzibol.nl.
+const FORM_ACTION = "https://formsubmit.co/info@clauzibol.nl";
 ---
-<Layout title="Contact & Nieuwsbrief — Clauzibol">
+<Layout title="Contact — Clauzibol">
   <section class="max-w-2xl mx-auto px-6 py-16">
     <p class="text-xs uppercase tracking-[0.3em]" style="color:var(--color-gold)">Contact</p>
-    <h1 class="serif text-4xl md:text-5xl mt-3 mb-6" style="color:var(--color-cream)">Schrijf je in. Of stuur ons een bericht.</h1>
+    <h1 class="serif text-4xl md:text-5xl mt-3 mb-6" style="color:var(--color-cream)">Schrijf de ziener</h1>
     <p class="opacity-90 mb-10">
-      Elke maandag om 07:00 uur opent het volgende slot. Wil je een seintje per e-mail? Schrijf je hieronder
-      in — dubbele opt-in, geen spam, één mailtje per week.
+      Een vraag, een reactie, of getuigenis van iets wat u raakte? We lezen alles. We antwoorden waar mogelijk.
+      Uw woorden blijven van u — we publiceren niets zonder toestemming.
     </p>
 
     <form
-      class="rounded-lg border p-6 mb-10"
+      action={FORM_ACTION}
+      method="POST"
+      class="rounded-lg border p-6 space-y-4"
       style="border-color:rgba(184,134,11,0.3);background:rgba(184,134,11,0.04)"
-      action="https://formspree.io/f/your-form-id"
-      method="POST"
     >
-      <label class="block text-sm mb-2" style="color:var(--color-gold-soft)">E-mailadres</label>
-      <input
-        type="email"
-        name="email"
-        required
-        placeholder="naam@voorbeeld.nl"
-        class="w-full rounded px-3 py-2 mb-4 bg-transparent border"
-        style="border-color:rgba(184,134,11,0.4);color:var(--color-cream)"
-      />
-      <button type="submit" class="px-5 py-2.5 rounded text-sm" style="background:var(--color-gold);color:var(--color-night)">
-        Inschrijven
+      <input type="hidden" name="_subject" value="Bericht via clauzibol.nl" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_captcha" value="true" />
+      <input type="hidden" name="_next" value="https://clauzibol.nl/contact?verstuurd=1" />
+      <!-- honeypot tegen bots -->
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+
+      <div>
+        <label for="naam" class="block text-sm mb-1" style="color:var(--color-gold-soft)">Naam</label>
+        <input id="naam" type="text" name="Naam" required
+          class="w-full rounded px-3 py-2 bg-transparent border focus:outline-none focus:ring-1"
+          style="border-color:rgba(184,134,11,0.4);color:var(--color-cream)" />
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm mb-1" style="color:var(--color-gold-soft)">E-mail</label>
+        <input id="email" type="email" name="E-mail" required
+          class="w-full rounded px-3 py-2 bg-transparent border"
+          style="border-color:rgba(184,134,11,0.4);color:var(--color-cream)" />
+      </div>
+
+      <div>
+        <label for="onderwerp" class="block text-sm mb-1" style="color:var(--color-gold-soft)">Onderwerp</label>
+        <select id="onderwerp" name="Onderwerp"
+          class="w-full rounded px-3 py-2 border"
+          style="border-color:rgba(184,134,11,0.4);color:var(--color-cream);background:#1a1a2e">
+          <option>Reactie op een blog</option>
+          <option>Vraag over het project</option>
+          <option>Technische vraag</option>
+          <option>Pers / interview</option>
+          <option>Anders</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="bericht" class="block text-sm mb-1" style="color:var(--color-gold-soft)">Bericht</label>
+        <textarea id="bericht" name="Bericht" rows="6" required
+          class="w-full rounded px-3 py-2 bg-transparent border"
+          style="border-color:rgba(184,134,11,0.4);color:var(--color-cream)"></textarea>
+      </div>
+
+      <label class="flex items-start gap-2 text-xs opacity-80">
+        <input type="checkbox" name="Nieuwsbrief" value="ja" class="mt-1" />
+        <span>Ja, schrijf me ook in voor de wekelijkse release-mail (één mailtje per week, uitschrijven altijd mogelijk).</span>
+      </label>
+
+      <button type="submit"
+        class="w-full px-5 py-3 rounded text-sm font-semibold"
+        style="background:var(--color-gold);color:var(--color-night)">
+        Verstuur bericht
       </button>
+
+      <p class="text-xs opacity-60">
+        Door te versturen ga je akkoord met onze <a href="/colofon" class="underline">privacyverklaring</a>.
+        We gebruiken FormSubmit.co om de mail door te sturen; geen tracking, geen reclame.
+      </p>
     </form>
 
-    <h2 class="serif text-2xl mt-12 mb-4" style="color:var(--color-gold)">Vragen of reacties?</h2>
-    <form
-      class="rounded-lg border p-6"
-      style="border-color:rgba(255,255,255,0.08)"
-      action="https://formspree.io/f/your-form-id"
-      method="POST"
-    >
-      <label class="block text-sm mb-2" style="color:var(--color-gold-soft)">Naam</label>
-      <input type="text" name="name" required class="w-full rounded px-3 py-2 mb-4 bg-transparent border" style="border-color:rgba(255,255,255,0.15);color:var(--color-cream)" />
-
-      <label class="block text-sm mb-2" style="color:var(--color-gold-soft)">E-mail</label>
-      <input type="email" name="email" required class="w-full rounded px-3 py-2 mb-4 bg-transparent border" style="border-color:rgba(255,255,255,0.15);color:var(--color-cream)" />
-
-      <label class="block text-sm mb-2" style="color:var(--color-gold-soft)">Bericht</label>
-      <textarea name="message" rows="5" required class="w-full rounded px-3 py-2 mb-4 bg-transparent border" style="border-color:rgba(255,255,255,0.15);color:var(--color-cream)"></textarea>
-
-      <button type="submit" class="px-5 py-2.5 rounded text-sm border" style="border-color:var(--color-gold);color:var(--color-gold)">
-        Versturen
-      </button>
-    </form>
+    {Astro.url.searchParams.get("verstuurd") && (
+      <div class="mt-6 rounded-lg border p-4" style="border-color:var(--color-gold);background:rgba(184,134,11,0.1)">
+        <p style="color:var(--color-cream)">✓ Bedankt — uw bericht is verzonden. We lezen het en antwoorden waar mogelijk.</p>
+      </div>
+    )}
 
     <div class="mt-10 text-sm opacity-80 space-y-1">
       <p>Of mail direct: <a href="mailto:info@clauzibol.nl">info@clauzibol.nl</a></p>
