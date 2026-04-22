@@ -75,12 +75,18 @@ export const POST: APIRoute = async ({ request }) => {
         console.error("[brevo] welkomstmail faalde", e);
       });
 
-      // Admin-notificatie: alleen als NOTIFY_EMAIL is geconfigureerd
-      const notifyEmail = import.meta.env.NOTIFY_EMAIL;
+      // Admin-notificatie: alleen als NOTIFY_EMAIL is geconfigureerd.
+      // process.env eerst (runtime, werkt op Vercel) met import.meta.env als
+      // fallback voor lokale astro dev. Vite vervangt import.meta.env.X
+      // statisch op build-time; als de env-var er toen niet was, blijft 'ie
+      // undefined. process.env leest op runtime en is dus betrouwbaarder.
+      const notifyEmail = process.env.NOTIFY_EMAIL || import.meta.env.NOTIFY_EMAIL;
       if (notifyEmail) {
         await sendAdminNotification({ apiKey, subscriberEmail: email, bron, notifyEmail, senderEmail, senderName }).catch((e) => {
           console.error("[brevo] admin-notificatie faalde", e);
         });
+      } else {
+        console.warn("[brevo] NOTIFY_EMAIL niet gezet, admin-notificatie overgeslagen");
       }
     }
 
