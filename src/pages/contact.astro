@@ -118,14 +118,13 @@ import Layout from "../layouts/Layout.astro";
         btn.textContent = "Verzenden...";
 
         try {
+          // FormData als body = "simple request", geen CORS-preflight.
+          // Voorkomt "Failed to fetch" op Edge + strikte tracking-preventie.
           const data = new FormData(form);
-          // FormSubmit AJAX wil JSON body
-          const obj = {};
-          data.forEach((v, k) => { obj[k] = v; });
           const res = await fetch(endpoint, {
             method: "POST",
-            headers: { "Content-Type": "application/json", "Accept": "application/json" },
-            body: JSON.stringify(obj),
+            headers: { "Accept": "application/json" },
+            body: data,
           });
           const json = await res.json().catch(() => ({}));
           if (res.ok && (json.success === "true" || json.success === true)) {
