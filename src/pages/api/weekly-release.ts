@@ -128,7 +128,31 @@ async function handle(request: Request): Promise<Response> {
     return json({ ok: false, step: "send", status: sendRes.status, error: err, campaignId }, 502);
   }
 
+  // ── IndexNow: ping Bing en Yandex zodat de nieuwe unlock direct crawlbaar is ──
+  const blogUrl = `https://www.clauzibol.nl/blog/${recent.slug}`;
+  await pingIndexNow([blogUrl, "https://www.clauzibol.nl/blogs"]).catch((e) => {
+    console.error("[indexnow] ping faalde", e);
+  });
+
   return json({ ok: true, week: recent.number, campaignId, title }, 200);
+}
+
+async function pingIndexNow(urlList: string[]): Promise<void> {
+  const key = "55b53a06e715f3014e894261a5babd5631b861ca22ff523a280d7456fd599c21";
+  const host = "www.clauzibol.nl";
+  const res = await fetch("https://api.indexnow.org/indexnow", {
+    method: "POST",
+    headers: { "Content-Type": "application/json; charset=utf-8" },
+    body: JSON.stringify({
+      host,
+      key,
+      keyLocation: `https://${host}/${key}.txt`,
+      urlList,
+    }),
+  });
+  if (res.status !== 200 && res.status !== 202) {
+    throw new Error(`IndexNow returned ${res.status}`);
+  }
 }
 
 async function findExistingCampaign(apiKey: string, name: string): Promise<number | null> {
