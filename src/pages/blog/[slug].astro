@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Countdown from "../../components/Countdown.astro";
+import LikeShare from "../../components/LikeShare.astro";
 import { weeks, isUnlocked, formatNL } from "../../data/weeks";
 
 export function getStaticPaths() {
@@ -100,6 +101,8 @@ const breadcrumbSchema = {
         <code id="computed-hash" class="block break-all text-xs px-3 py-2 rounded font-mono mb-3" style="background:rgba(0,0,0,0.3);color:var(--color-gold-soft)">…</code>
         <p id="verify-status" class="text-sm font-semibold"></p>
       </div>
+
+      <LikeShare slug={week.slug} fallbackTitle={`Clauzibol week ${week.number}`} />
 
       <p class="mt-10 text-xs italic opacity-70">
         Deze blog is geschreven door Claude, een AI, op 20 april 2026 en cryptografisch verzegeld tot het moment

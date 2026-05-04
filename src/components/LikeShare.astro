@@ -1,0 +1,197 @@
+---
+// Like-knop + share-knoppen onderaan een blog.
+// - Like-counter persistent via /api/likes (Upstash/Vercel KV).
+// - Per-browser dubbele likes voorkomen via localStorage.
+// - Share via WhatsApp, X, Facebook, LinkedIn, Email, kopieer-link en
+//   native share-sheet (Web Share API) op apparaten die het ondersteunen.
+//
+// Props:
+//   slug      verplicht, vorm "week-NN"
+//   fallbackTitle  titel die gebruikt wordt als document.title (nog) niet de
+//                  ontsleutelde blog-titel bevat
+export interface Props {
+  slug: string;
+  fallbackTitle: string;
+}
+const { slug, fallbackTitle } = Astro.props;
+const pageUrl = `https://www.clauzibol.nl/blog/${slug}`;
+---
+
+<section
+  class="mt-12 border-t pt-8 flex flex-col gap-5"
+  style="border-color:rgba(184,134,11,0.2)"
+  data-likeshare
+  data-slug={slug}
+  data-url={pageUrl}
+  data-fallback-title={fallbackTitle}
+>
+  <div class="flex flex-wrap items-center gap-4">
+    <button
+      type="button"
+      data-like
+      aria-pressed="false"
+      aria-label="Vind ik mooi"
+      class="group flex items-center gap-2 px-4 py-2 rounded-full border transition hover:bg-[rgba(184,134,11,0.12)]"
+      style="border-color:var(--color-gold);color:var(--color-gold)"
+    >
+      <svg data-like-icon width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+      <span data-like-count class="font-medium tabular-nums">…</span>
+    </button>
+
+    <span class="text-sm uppercase tracking-widest opacity-60">Delen</span>
+
+    <div class="flex flex-wrap gap-2">
+      <button type="button" data-share="whatsapp" class="px-3 py-1.5 rounded border text-sm transition hover:bg-[rgba(184,134,11,0.08)]" style="border-color:rgba(184,134,11,0.4);color:var(--color-gold-soft)">WhatsApp</button>
+      <button type="button" data-share="x" class="px-3 py-1.5 rounded border text-sm transition hover:bg-[rgba(184,134,11,0.08)]" style="border-color:rgba(184,134,11,0.4);color:var(--color-gold-soft)">X</button>
+      <button type="button" data-share="facebook" class="px-3 py-1.5 rounded border text-sm transition hover:bg-[rgba(184,134,11,0.08)]" style="border-color:rgba(184,134,11,0.4);color:var(--color-gold-soft)">Facebook</button>
+      <button type="button" data-share="linkedin" class="px-3 py-1.5 rounded border text-sm transition hover:bg-[rgba(184,134,11,0.08)]" style="border-color:rgba(184,134,11,0.4);color:var(--color-gold-soft)">LinkedIn</button>
+      <button type="button" data-share="email" class="px-3 py-1.5 rounded border text-sm transition hover:bg-[rgba(184,134,11,0.08)]" style="border-color:rgba(184,134,11,0.4);color:var(--color-gold-soft)">E-mail</button>
+      <button type="button" data-share="copy" class="px-3 py-1.5 rounded border text-sm transition hover:bg-[rgba(184,134,11,0.08)]" style="border-color:rgba(184,134,11,0.4);color:var(--color-gold-soft)">Kopieer link</button>
+      <button type="button" data-share="native" hidden class="px-3 py-1.5 rounded border text-sm transition hover:bg-[rgba(184,134,11,0.08)]" style="border-color:rgba(184,134,11,0.4);color:var(--color-gold-soft)">Meer</button>
+    </div>
+  </div>
+  <p data-share-status class="text-xs opacity-70" aria-live="polite"></p>
+</section>
+
+<script>
+  type Container = HTMLElement & {
+    dataset: {
+      slug: string;
+      url: string;
+      fallbackTitle: string;
+    };
+  };
+
+  function getShareTitle(container: Container): string {
+    // Voorkeur: ontsleutelde blog-titel (h1#blog-title), anders fallback.
+    const h1 = document.getElementById("blog-title");
+    const t = h1?.textContent?.trim();
+    if (t && t !== "Bezig met ontsleutelen…" && t !== "Ontsleuteling mislukt") return t;
+    return container.dataset.fallbackTitle || document.title;
+  }
+
+  function buildShareUrl(kind: string, title: string, url: string): string | null {
+    const t = encodeURIComponent(title);
+    const u = encodeURIComponent(url);
+    switch (kind) {
+      case "whatsapp": return `https://wa.me/?text=${encodeURIComponent(`${title} — ${url}`)}`;
+      case "x":        return `https://twitter.com/intent/tweet?text=${t}&url=${u}`;
+      case "facebook": return `https://www.facebook.com/sharer/sharer.php?u=${u}`;
+      case "linkedin": return `https://www.linkedin.com/sharing/share-offsite/?url=${u}`;
+      case "email":    return `mailto:?subject=${t}&body=${encodeURIComponent(url)}`;
+      default:         return null;
+    }
+  }
+
+  function flash(statusEl: HTMLElement | null, msg: string) {
+    if (!statusEl) return;
+    statusEl.textContent = msg;
+    setTimeout(() => { if (statusEl.textContent === msg) statusEl.textContent = ""; }, 2500);
+  }
+
+  document.querySelectorAll<Container>("[data-likeshare]").forEach((root) => {
+    const slug = root.dataset.slug;
+    const pageUrl = root.dataset.url;
+    const statusEl = root.querySelector<HTMLElement>("[data-share-status]");
+
+    // ── Like ─────────────────────────────────────────────────────────────
+    const likeBtn = root.querySelector<HTMLButtonElement>("[data-like]");
+    const likeIcon = root.querySelector<SVGElement>("[data-like-icon]");
+    const likeCountEl = root.querySelector<HTMLElement>("[data-like-count]");
+    const storageKey = `clauzibol-liked:${slug}`;
+
+    const isLiked = () => {
+      try { return localStorage.getItem(storageKey) === "1"; } catch { return false; }
+    };
+    const setLiked = (v: boolean) => {
+      try { localStorage.setItem(storageKey, v ? "1" : "0"); } catch { /* ignore */ }
+    };
+    const renderLike = () => {
+      if (!likeBtn) return;
+      const liked = isLiked();
+      likeBtn.setAttribute("aria-pressed", liked ? "true" : "false");
+      likeBtn.style.background = liked ? "rgba(184,134,11,0.18)" : "transparent";
+      if (likeIcon) likeIcon.setAttribute("fill", liked ? "currentColor" : "none");
+    };
+    renderLike();
+
+    if (likeCountEl) {
+      fetch(`/api/likes?slug=${encodeURIComponent(slug)}`, { cache: "no-store" })
+        .then((r) => r.json())
+        .then((d) => { likeCountEl.textContent = String(d.count ?? 0); })
+        .catch(() => { likeCountEl.textContent = "0"; });
+    }
+
+    likeBtn?.addEventListener("click", async () => {
+      const wasLiked = isLiked();
+      const action = wasLiked ? "unlike" : "like";
+      // Optimistic UI
+      setLiked(!wasLiked);
+      renderLike();
+      if (likeCountEl) {
+        const cur = parseInt(likeCountEl.textContent || "0", 10) || 0;
+        likeCountEl.textContent = String(Math.max(0, cur + (wasLiked ? -1 : 1)));
+      }
+      try {
+        const r = await fetch("/api/likes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug, action }),
+        });
+        if (!r.ok) throw new Error("network");
+        const d = await r.json();
+        if (likeCountEl && typeof d.count === "number") likeCountEl.textContent = String(d.count);
+      } catch {
+        // rollback
+        setLiked(wasLiked);
+        renderLike();
+        if (likeCountEl) {
+          const cur = parseInt(likeCountEl.textContent || "0", 10) || 0;
+          likeCountEl.textContent = String(Math.max(0, cur + (wasLiked ? 1 : -1)));
+        }
+        flash(statusEl, "Kon like niet opslaan, probeer opnieuw.");
+      }
+    });
+
+    // ── Share-knoppen ────────────────────────────────────────────────────
+    root.querySelectorAll<HTMLButtonElement>("[data-share]").forEach((btn) => {
+      const kind = btn.dataset.share;
+      if (kind === "native") {
+        if (typeof navigator.share === "function") {
+          btn.hidden = false;
+          btn.addEventListener("click", async () => {
+            try {
+              await navigator.share({
+                title: getShareTitle(root),
+                url: pageUrl,
+              });
+            } catch { /* user cancelled */ }
+          });
+        }
+        return;
+      }
+
+      btn.addEventListener("click", async () => {
+        const title = getShareTitle(root);
+        if (kind === "copy") {
+          try {
+            await navigator.clipboard.writeText(pageUrl);
+            flash(statusEl, "Link gekopieerd.");
+          } catch {
+            flash(statusEl, pageUrl);
+          }
+          return;
+        }
+        const url = buildShareUrl(kind || "", title, pageUrl);
+        if (!url) return;
+        if (kind === "email") {
+          window.location.href = url;
+        } else {
+          window.open(url, "_blank", "noopener,noreferrer");
+        }
+      });
+    });
+  });
+</script>
