@@ -20,7 +20,11 @@
 export const prerender = false;
 
 import type { APIRoute } from "astro";
-import { timelockDecrypt, quicknetClient } from "tlock-js";
+import { timelockDecrypt, HttpChainClient, HttpCachingChain } from "tlock-js";
+
+// Quicknet (League of Entropy) chain — komt overeen met scripts/unlock-times.mjs.
+const QUICKNET_URL = "https://api.drand.sh/52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971";
+const quicknet = () => new HttpChainClient(new HttpCachingChain(QUICKNET_URL));
 import matter from "gray-matter";
 import { weeks, isUnlocked } from "../../data/weeks";
 
@@ -71,12 +75,12 @@ async function handle(request: Request): Promise<Response> {
   const tlockUrl = `${origin}/sealed/${recent.slug}.tlock`;
   const res = await fetch(tlockUrl);
   if (!res.ok) return json({ ok: false, error: `kan ${tlockUrl} niet laden: ${res.status}` }, 500);
-  const ciphertext = new Uint8Array(await res.arrayBuffer());
+  const ciphertext = await res.text();
 
   let plaintext: string;
   try {
-    const buf = await timelockDecrypt(ciphertext, quicknetClient());
-    plaintext = new TextDecoder().decode(buf);
+    const buf = await timelockDecrypt(ciphertext, quicknet());
+    plaintext = buf.toString();
   } catch (err) {
     return json({ ok: false, error: "tlock decrypt failed: " + (err as Error).message }, 500);
   }

@@ -18,7 +18,11 @@ import { readFile, writeFile, unlink, stat } from "node:fs/promises";
 import { createHash, randomBytes } from "node:crypto";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { timelockEncrypt, quicknetClient } from "tlock-js";
+import { timelockEncrypt, HttpChainClient, HttpCachingChain } from "tlock-js";
+
+// Quicknet (League of Entropy) chain — komt overeen met scripts/unlock-times.mjs.
+const QUICKNET_URL = "https://api.drand.sh/52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971";
+const quicknetClient = () => new HttpChainClient(new HttpCachingChain(QUICKNET_URL));
 import { unlockForWeek } from "./unlock-times.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
