@@ -152,7 +152,7 @@ const breadcrumbSchema = {
 
       try {
         const [{ timelockDecrypt, quicknetClient }, matterMod] = await Promise.all([
-          import("https://esm.sh/tlock-js@0.9.0"),
+          import("https://esm.sh/tlock-js@0.9.0?bundle"),
           import("https://esm.sh/gray-matter@4.0.3?bundle"),
         ]);
         const matter = matterMod.default;
