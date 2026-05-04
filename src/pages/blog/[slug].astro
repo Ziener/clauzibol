@@ -151,7 +151,7 @@ const breadcrumbSchema = {
       };
 
       try {
-        const [{ timelockDecrypt, quicknetClient }, matterMod] = await Promise.all([
+        const [{ timelockDecrypt, HttpChainClient, HttpCachingChain }, matterMod] = await Promise.all([
           import("https://esm.sh/tlock-js@0.9.0?bundle"),
           import("https://esm.sh/gray-matter@4.0.3?bundle"),
         ]);
@@ -159,11 +159,13 @@ const breadcrumbSchema = {
 
         const res = await fetch(tlockUrl);
         if (!res.ok) throw new Error(`Kon ${tlockUrl} niet laden (${res.status})`);
-        const ciphertext = new Uint8Array(await res.arrayBuffer());
+        const ciphertext = await res.text();
 
-        const client = quicknetClient();
+        // Quicknet (League of Entropy) chain — komt overeen met scripts/unlock-times.mjs.
+        const QUICKNET_URL = "https://api.drand.sh/52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971";
+        const client = new HttpChainClient(new HttpCachingChain(QUICKNET_URL));
         const plaintextBuf = await timelockDecrypt(ciphertext, client);
-        const plaintext = new TextDecoder().decode(plaintextBuf);
+        const plaintext = plaintextBuf.toString();
 
         // SHA-256 verificatie
         const enc = new TextEncoder().encode(plaintext);
