@@ -1,4 +1,8 @@
 ---
+// Niet pre-renderen: de unlock-stand (volgend slot, teller, tegels) hangt af van
+// de huidige tijd. Statisch builden zou de pagina bevriezen op het build-moment.
+export const prerender = false;
+
 import Layout from "../layouts/Layout.astro";
 import Tile from "../components/Tile.astro";
 import Countdown from "../components/Countdown.astro";

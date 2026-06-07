@@ -1,4 +1,8 @@
 ---
+// Niet pre-renderen: het ontgrendeld/verzegeld-overzicht hangt af van de huidige
+// tijd. Statisch builden zou de lijst bevriezen op het build-moment.
+export const prerender = false;
+
 import Layout from "../layouts/Layout.astro";
 import { weeks, isUnlocked, formatNL } from "../data/weeks";
 ---
