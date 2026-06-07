@@ -61,5 +61,6 @@ export function formatNL(iso: string): string {
     day: "numeric",
     month: "long",
     year: "numeric",
+    timeZone: "Europe/Amsterdam",
   });
 }

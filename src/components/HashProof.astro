@@ -44,7 +44,7 @@ const manifest = manifestJson as {
           {weeks.map((w) => {
             const entry = manifest.entries.find((e) => e.week === w.number);
             const open = isUnlocked(w);
-            const datum = new Date(w.unlockISO).toLocaleDateString("nl-NL", { day: "2-digit", month: "short", year: "numeric" });
+            const datum = new Date(w.unlockISO).toLocaleDateString("nl-NL", { day: "2-digit", month: "short", year: "numeric", timeZone: "Europe/Amsterdam" });
             return (
               <tr class="border-t" style="border-color:rgba(255,255,255,0.05)">
                 <td class="px-4 py-2 opacity-80">{String(w.number).padStart(2, "0")}</td>
