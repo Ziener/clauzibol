@@ -169,10 +169,16 @@ const allJsonLd = jsonLd
           </div>
         </div>
         <div class="gold-divider my-8"></div>
-        <p class="text-xs opacity-60">
-          © {new Date().getFullYear()} Clauzibol, Bijbelteksten uit de Herziene Statenvertaling (HSV).
-          Aan de inhoud van de blogs kunnen geen rechten worden ontleend; de Bijbel is leidend, niet deze woorden.
-        </p>
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+          <p class="text-xs opacity-60 max-w-2xl">
+            © {new Date().getFullYear()} Clauzibol, Bijbelteksten uit de Herziene Statenvertaling (HSV).
+            Aan de inhoud van de blogs kunnen geen rechten worden ontleend; de Bijbel is leidend, niet deze woorden.
+          </p>
+          <p class="text-xs opacity-60 md:text-right shrink-0">
+            Deze website is gebouwd en wordt beheerd door
+            <a href="https://www.goedgestart.nl" target="_blank" rel="noopener" class="underline" style="color:var(--color-gold-soft)">Goedgestart.nl</a>
+          </p>
+        </div>
       </div>
     </footer>
   </body>
