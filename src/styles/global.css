@@ -24,6 +24,15 @@
   }
   a { color: var(--color-gold-soft); }
   a:hover { color: var(--color-gold); }
+
+  /* Toegankelijkheid (WCAG 1.4.1): inline-links in lopende tekst moeten met
+     meer dan alleen kleur te onderscheiden zijn. We onderstrepen daarom links
+     binnen tekstparagrafen van de hoofdinhoud. Navigatie, footer-linklijsten
+     en knop-links staan in eigen blokken (buiten <p>) en blijven ongemoeid. */
+  main p a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
 }
 
 .tile-locked {
