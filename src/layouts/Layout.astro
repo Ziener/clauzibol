@@ -99,10 +99,21 @@ const allJsonLd = jsonLd
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://esm.sh" />
+    {/* Fonts niet-renderblokkerend laden: als style preloaden en daarna activeren.
+        Scheelt op trage mobiele verbindingen ~1,9s render-blocking. display=swap
+        toont direct de fallback-letter tot het webfont binnen is. */}
     <link
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
 
     {/* JSON-LD structured data */}
     {allJsonLd.map((schema) => (
